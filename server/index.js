@@ -49,19 +49,19 @@ const server = new ApolloServer({
 });
 
 // The `listen` method launches a web server.
-// server.listen().then(({ url }) => {
-//   console.log(`🚀  Server ready at ${url}`);
-// });
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
 
-mongoose
-  .connect(MONGODB, { useNewUrlParser: true })
-  .then(() => {
-    console.log("MongoDB connected");
-    return server.listen({ port: PORT });
-  })
-  .then(res => {
-    console.log(`Server is running at ${res.url}`);
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// mongoose
+//   .connect(MONGODB, { useNewUrlParser: true })
+//   .then(() => {
+//     console.log("MongoDB connected");
+//     return server.listen({ port: PORT });
+//   })
+//   .then(res => {
+//     console.log(`Server is running at ${res.url}`);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });

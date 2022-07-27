@@ -18,7 +18,7 @@ module.exports = gql`
     Characters: String!
     UserID: String!
     CreatedDate: String!
-    NumberOfSearch: BigInt!
+    NumberOfSearch: Int!
     IsDictionary: Boolean!
   }
   type Pharse {
@@ -56,10 +56,16 @@ module.exports = gql`
     EntityVoteID: ID!
     IsUpVote: Boolean
   }
-  type Query{
-
+  input UserInput {
+    Username: String!
+    Email: String!
+    Password: String!
+    Role: String!
   }
-  type Mutation{
-    
+  type Query {
+    getFood: String
+  }
+  type Mutation {
+    createUser(userInput: UserInput): User!
   }
 `;

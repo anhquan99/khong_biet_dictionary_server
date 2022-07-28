@@ -64,8 +64,9 @@ module.exports = gql`
   }
   type Query {
     getFood: String
+    login(Username: String!, Password: String!): User!
   }
   type Mutation {
-    createUser(userInput: UserInput): User!
+    register(userInput: UserInput!): User!
   }
 `;

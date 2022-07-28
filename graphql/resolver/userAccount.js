@@ -23,7 +23,7 @@ module.exports = {
     async register(
       _,
       {
-        userInput: { Username, Email, Password, Role }
+        userInput: { Username, Email, Password }
       }
     ) {
       const oldUser = await User.findOne({ Username, Email });
@@ -36,7 +36,7 @@ module.exports = {
         Username: Username,
         Email: Email,
         Password: Password,
-        Role: Role,
+        Role: "User",
         Level: 0
       });
       const tempNewUser = await newUser.save();

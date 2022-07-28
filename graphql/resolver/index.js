@@ -1,12 +1,15 @@
-const userResolvers = require("./users");
+const userAccountResolvers = require("./userAccount");
+const adminWordResolvers = require("./adminWords");
 module.exports = {
   Query: {
-    ...userResolvers.Query,
+    ...userAccountResolvers.Query,
+    ...adminWordResolvers.Query,
     getFood() {
       return "Food";
     }
   },
   Mutation: {
-    ...userResolvers.Mutation
+    ...adminWordResolvers.Mutation,
+    ...userAccountResolvers.Mutation
   }
 };

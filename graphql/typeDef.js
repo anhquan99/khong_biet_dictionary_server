@@ -60,14 +60,13 @@ module.exports = gql`
     Username: String!
     Email: String!
     Password: String!
+    Role: String!
   }
   type Query {
     getFood: String
-    getAllWords: String!
     login(Username: String!, Password: String!): User!
   }
   type Mutation {
-    createWord: String!
     register(userInput: UserInput!): User!
   }
 `;

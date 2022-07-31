@@ -16,7 +16,7 @@ module.exports = {
       var token = generateToken(loginUser);
       return {
         ...loginUser._doc,
-        ID: loginUser._id,
+        Id: loginUser._id,
         token
       };
     }

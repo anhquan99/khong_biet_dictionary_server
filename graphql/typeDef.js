@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 module.exports = gql`
   type User {
-    ID: ID!
+    Id: ID!
     Username: String!
     Email: String!
     Password: String!
@@ -15,9 +15,9 @@ module.exports = gql`
     Badge: String!
   }
   type Word {
-    ID: ID!
+    Id: ID!
     Characters: String!
-    UserID: String!
+    Username: String!
     CreatedDate: String!
     NumberOfSearch: Int!
     IsDictionary: Boolean!
@@ -27,9 +27,9 @@ module.exports = gql`
     Words: [Word]!
   }
   type Meaning {
-    ID: ID!
-    WordID: ID!
-    UserID: ID!
+    Id: ID!
+    Word: ID!
+    Username: ID!
     Meaning: String!
     AllocationType: ID!
     Example: [String]
@@ -42,11 +42,11 @@ module.exports = gql`
     WordID: ID!
   }
   type AllocationType {
-    ID: ID!
+    Id: ID!
     Name: String!
   }
   type UserReport {
-    ID: ID!
+    Id: ID!
     UserID: ID!
     Description: String!
     IsValid: Boolean
@@ -66,6 +66,7 @@ module.exports = gql`
   type Query {
     getFood: String
     login(Username: String!, Password: String!): User!
+    findWord(lookupWord: String!): Word!
   }
   type Mutation {
     register(userInput: UserInput!): User!

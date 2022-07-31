@@ -35,6 +35,10 @@ const userSchema = new Schema({
   Level: {
     type: Number,
     require: true
+  },
+  isDeleted: {
+    type: Boolean,
+    require: true
   }
 });
 

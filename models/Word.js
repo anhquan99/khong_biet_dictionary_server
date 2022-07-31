@@ -1,4 +1,5 @@
 const { model, Schema } = require("mongoose");
+const meaning = require("./Meaning");
 
 const wordSchema = new Schema({
   Characters: {
@@ -12,7 +13,7 @@ const wordSchema = new Schema({
     },
     unique: true
   },
-  UserId: {
+  Username: {
     type: String,
     require: true
   },
@@ -28,10 +29,17 @@ const wordSchema = new Schema({
     type: Boolean,
     require: true
   },
+  Meaning: [meaning],
+  Bookmark: [
+    {
+      UserId: String,
+      createdAt: String
+    }
+  ],
   user: {
     type: Schema.Types.ObjectId,
     ref: "users"
   }
 });
 
-module.exports = model("word", wordSchema);
+module.exports = model("Word", wordSchema);

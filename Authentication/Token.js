@@ -7,7 +7,8 @@ module.exports = {
       {
         id: user._id,
         email: user.Email,
-        username: user.Username
+        username: user.Username,
+        role: user.Role
       },
       SECRET_KEY,
       { expiresIn: "1h" }

@@ -7,6 +7,7 @@ module.exports = gql`
     Password: String!
     Role: String!
     Level: Int!
+    token: String!
   }
   type Milestone {
     MinLevel: Int!
@@ -68,5 +69,6 @@ module.exports = gql`
   }
   type Mutation {
     register(userInput: UserInput!): User!
+    createWord(Characters: String!): Word!
   }
 `;

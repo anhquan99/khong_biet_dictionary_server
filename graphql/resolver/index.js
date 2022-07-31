@@ -1,4 +1,6 @@
 const userResolvers = require("./users");
+const wordResolvers = require("./words");
+
 module.exports = {
   Query: {
     ...userResolvers.Query,
@@ -7,6 +9,7 @@ module.exports = {
     }
   },
   Mutation: {
-    ...userResolvers.Mutation
+    ...userResolvers.Mutation,
+    ...wordResolvers.Mutation
   }
 };

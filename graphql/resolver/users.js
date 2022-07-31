@@ -1,6 +1,7 @@
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
-
+const { validatePassword } = require("../../Validator/UserValidator");
+const { generateToken } = require("../../Authentication/Token");
 module.exports = {
   Query: {
     async login(_, { Username, Password }) {
@@ -12,10 +13,11 @@ module.exports = {
       if (!match) {
         throw new Error("Wrong crendetials");
       }
-      console.log(loginUser._id);
+      var token = generateToken(loginUser);
       return {
         ...loginUser._doc,
-        ID: loginUser._id
+        ID: loginUser._id,
+        token
       };
     }
   },
@@ -26,9 +28,10 @@ module.exports = {
         userInput: { Username, Email, Password, Role }
       }
     ) {
-      const oldUser = await User.findOne({ Username, Email });
-      if (oldUser) {
-        throw new Error("user is taken");
+      if (!validatePassword(Password)) {
+        throw new Error(
+          "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
+        );
       }
       var salt = await bcrypt.genSalt(Math.floor(Math.random() * 5));
       Password = await bcrypt.hash(Password, salt);

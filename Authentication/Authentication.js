@@ -9,8 +9,10 @@ module.exports = context => {
         const user = jwt.verify(token, SECRET_KEY);
         return user;
       } catch (err) {
-        throw new Error("user not found");
+        throw new Error("User not found");
       }
     }
+    throw new Error("Authentication token must be 'Bearer [Token]'");
   }
+  throw new Error("Authentication header must be provided");
 };

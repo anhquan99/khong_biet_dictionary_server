@@ -18,7 +18,7 @@ module.exports = gql`
     Id: ID!
     Characters: String!
     Username: String!
-    CreatedDate: String!
+    CreatedAt: String!
     NumberOfSearch: Int!
     IsDictionary: Boolean!
   }
@@ -33,7 +33,7 @@ module.exports = gql`
     Meaning: String!
     AllocationType: ID!
     Example: [String]
-    CreatedDate: String!
+    CreatedAt: String!
     Status: Int!
     IsDictionary: Boolean!
   }
@@ -71,5 +71,6 @@ module.exports = gql`
   type Mutation {
     register(userInput: UserInput!): User!
     createWord(Characters: String!): Word!
+    bookmark(Characters: String!): Word!
   }
 `;

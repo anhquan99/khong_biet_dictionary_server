@@ -7,7 +7,7 @@ const wordSchema = new Schema({
     require: true,
     validate: {
       validator: word => {
-        return word.match("[^s]+");
+        return word.match("ApL+z");
       },
       message: "Invalid word"
     },
@@ -17,7 +17,7 @@ const wordSchema = new Schema({
     type: String,
     require: true
   },
-  CreatedDate: {
+  CreatedAt: {
     type: String,
     require: true
   },
@@ -32,13 +32,13 @@ const wordSchema = new Schema({
   Meaning: [meaning],
   Bookmark: [
     {
-      UserId: String,
-      createdAt: String
+      Username: String,
+      CreatedAt: String
     }
   ],
-  user: {
+  User: {
     type: Schema.Types.ObjectId,
-    ref: "users"
+    ref: "User"
   }
 });
 

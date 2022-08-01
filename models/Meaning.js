@@ -1,13 +1,18 @@
 const { Schema } = require("mongoose");
 
 const meaningSchema = new Schema({
+  meaning: {
+    type: String,
+    require: true
+  },
+
   Username: {
     type: String,
     require: true
   },
   AllocationType: String,
   Example: [String],
-  CreatedDate: {
+  CreatedAt: {
     type: String,
     require: true
   },
@@ -22,6 +27,10 @@ const meaningSchema = new Schema({
   IsDictionary: {
     type: Boolean,
     require: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "users"
   }
 });
 

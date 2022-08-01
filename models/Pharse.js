@@ -16,7 +16,8 @@ const pharseSchema = new Schema({
   NumberOfSearch: {
     type: Number,
     require: true
-  }
+  },
+  Words: [String]
 });
 
 module.exports = pharseSchema;

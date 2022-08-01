@@ -72,5 +72,6 @@ module.exports = gql`
     register(userInput: UserInput!): User!
     createWord(Characters: String!): Word!
     bookmark(Characters: String!): Word!
+    vote(Characters: String!, Vote: Boolean!): Word!
   }
 `;

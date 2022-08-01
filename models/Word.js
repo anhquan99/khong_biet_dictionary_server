@@ -1,13 +1,14 @@
 const { model, Schema } = require("mongoose");
 const meaning = require("./Meaning");
-
+const Vote = require("./UserVote");
+const Bookmark = require("./Bookmark");
 const wordSchema = new Schema({
   Characters: {
     type: String,
     require: true,
     validate: {
       validator: word => {
-        return word.match("ApL+z");
+        return word.match(/^[A-Z]+$/i);
       },
       message: "Invalid word"
     },
@@ -30,16 +31,12 @@ const wordSchema = new Schema({
     require: true
   },
   Meaning: [meaning],
-  Bookmark: [
-    {
-      Username: String,
-      CreatedAt: String
-    }
-  ],
+  Bookmark: [Bookmark],
   User: {
     type: Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
+  Vote: [Vote]
 });
 
 module.exports = model("Word", wordSchema);

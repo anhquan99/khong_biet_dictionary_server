@@ -6,7 +6,6 @@ module.exports = {
     return jwt.sign(
       {
         id: user._id,
-        email: user.Email,
         username: user.Username,
         role: user.Role
       },

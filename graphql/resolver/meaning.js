@@ -14,15 +14,16 @@ module.exports = {
     ) {
       const user = Authentication(context);
       const data = Meaning.findOne({ _id: id });
+      const Allocation = AllocationType.findOne({ Name: allocationType });
       if (data) {
         data.meaning = meaning;
-        data.allocationType.Name = allocationType;
+        data.allocationType = Allocation;
         data.status = status;
         data.isDictionary = isDictionary;
+        data.Allocation = mongoose.Types.ObjectId(Allocation._id);
         const result = await data.save();
         return result;
       } else {
-        const Allocation = AllocationType.findOne({ Name: allocationType });
         const newMeaning = new Meaning({
           meaning: meaning,
           Username: user.username,

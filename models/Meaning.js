@@ -1,7 +1,6 @@
 const { Schema } = require("mongoose");
-const AllocationType = require("./AllocationType");
 const meaningSchema = new Schema({
-  meaning: {
+  Meaning: {
     type: String,
     require: true
   },
@@ -10,7 +9,7 @@ const meaningSchema = new Schema({
     type: String,
     require: true
   },
-  AllocationType: AllocationType,
+  AllocationType: String,
   Example: [String],
   CreatedAt: {
     type: String,
@@ -20,7 +19,7 @@ const meaningSchema = new Schema({
     type: String,
     require: true,
     enum: {
-      values: ["submited", "approve", "reject", "delete"],
+      values: ["submitted", "approve", "reject", "delete"],
       message: "{VALUE} is not supported"
     }
   },
@@ -34,7 +33,7 @@ const meaningSchema = new Schema({
   },
   Allocation: {
     type: Schema.Types.ObjectId,
-    ref: "AllocationType"
+    ref: "allocationTypes"
   }
 });
 

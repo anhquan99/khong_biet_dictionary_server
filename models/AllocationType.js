@@ -1,9 +1,10 @@
-const { Schema } = require("mongoose");
+const { model, Schema } = require("mongoose");
 
 const AllocationTypeSchema = new Schema({
   Name: {
     type: String,
     require: true,
+    unique: true,
     max: [100, "Name max is 100 characters!"]
   },
   Username: {
@@ -20,4 +21,4 @@ const AllocationTypeSchema = new Schema({
   }
 });
 
-module.exports = AllocationTypeSchema;
+module.exports = model("allocationTypes", AllocationTypeSchema);

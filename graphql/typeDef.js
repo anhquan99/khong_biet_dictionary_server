@@ -26,15 +26,12 @@ module.exports = gql`
     Characters: String!
     Words: [Word]!
   }
-  type Meaning {
-    Id: ID!
-    Word: ID!
-    Username: ID!
+  input Meaning {
+    # Id: String
     Meaning: String!
-    AllocationType: ID!
+    AllocationType: String!
     Example: [String]
-    CreatedAt: String!
-    Status: Int!
+    Status: String!
     IsDictionary: Boolean!
   }
   type BookMark {
@@ -42,7 +39,6 @@ module.exports = gql`
     WordID: ID!
   }
   type AllocationType {
-    Id: ID!
     Name: String!
   }
   type UserReport {
@@ -63,6 +59,13 @@ module.exports = gql`
     Password: String!
     Role: String!
   }
+  input MeaningInput {
+    id: String
+    meaning: String!
+    allocationType: String!
+    status: String!
+    isDictionary: Boolean!
+  }
   type Query {
     getFood: String
     login(Username: String!, Password: String!): User!
@@ -73,5 +76,7 @@ module.exports = gql`
     createWord(Characters: String!): Word!
     bookmark(Characters: String!): Word!
     vote(Characters: String!, Vote: Boolean!): Word!
+    updateAllocationType(id: String, allocation: String!): AllocationType!
+    updateMeaning(id: String, word: String!, meaning: Meaning!): Word!
   }
 `;

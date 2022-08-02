@@ -3,15 +3,15 @@ const Authentication = require("../../Authentication/Authentication");
 module.exports = {
   Query: {},
   Mutation: {
-    async updateAllocationType(_, { oldAllocation, newAllocation }, context) {
+    async updateAllocationType(_, { id, allocation }, context) {
       const user = Authentication(context);
-      const allocationType = AllocationType.findOne({ name: oldAllocation });
+      var allocationType = await AllocationType.findOne({ _id: id });
       if (allocationType) {
-        allocationType.Name = newAllocation;
+        allocationType.Name = allocation;
         allocationType.CreatedAt = new Date().toISOString();
       } else {
         allocationType = new AllocationType({
-          Name: newAllocation,
+          Name: allocation,
           Username: user.username,
           CreatedAt: new Date().toISOString()
         });

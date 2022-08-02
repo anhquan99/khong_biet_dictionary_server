@@ -1,5 +1,5 @@
 const { Schema } = require("mongoose");
-
+const AllocationType = require("./AllocationType");
 const meaningSchema = new Schema({
   meaning: {
     type: String,
@@ -10,7 +10,7 @@ const meaningSchema = new Schema({
     type: String,
     require: true
   },
-  AllocationType: String,
+  AllocationType: AllocationType,
   Example: [String],
   CreatedAt: {
     type: String,
@@ -28,9 +28,13 @@ const meaningSchema = new Schema({
     type: Boolean,
     require: true
   },
-  user: {
+  User: {
     type: Schema.Types.ObjectId,
-    ref: "users"
+    ref: "User"
+  },
+  Allocation: {
+    type: Schema.Types.ObjectId,
+    ref: "AllocationType"
   }
 });
 

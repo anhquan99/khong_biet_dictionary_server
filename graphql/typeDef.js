@@ -27,7 +27,6 @@ module.exports = gql`
     Words: [Word]!
   }
   input Meaning {
-    # Id: String
     Meaning: String!
     AllocationType: String!
     Example: [String]
@@ -65,6 +64,11 @@ module.exports = gql`
     status: String!
     isDictionary: Boolean!
   }
+  input milestoneInput {
+    MinLevel: Int!
+    Title: String!
+    Badge: String!
+  }
   type Query {
     getFood: String
     login(Username: String!, Password: String!): User!
@@ -80,5 +84,6 @@ module.exports = gql`
     voteMeaning(id: String!, Vote: Boolean!): Word!
     reportMeaning(id: String!, report: UserReport!): Word!
     reportWord(Characters: String!, report: UserReport!): Word!
+    updateMilestone(id: String, milestone: milestoneInput!): Milestone!
   }
 `;

@@ -41,11 +41,10 @@ module.exports = gql`
   type AllocationType {
     Name: String!
   }
-  type UserReport {
-    Id: ID!
-    UserID: ID!
+  input UserReport {
+    Title: String!
     Description: String!
-    IsValid: Boolean
+    Status: String!
   }
   type UserVote {
     UserID: ID!
@@ -75,8 +74,11 @@ module.exports = gql`
     register(userInput: UserInput!): User!
     createWord(Characters: String!): Word!
     bookmark(Characters: String!): Word!
-    vote(Characters: String!, Vote: Boolean!): Word!
+    voteWord(Characters: String!, Vote: Boolean!): Word!
     updateAllocationType(id: String, allocation: String!): AllocationType!
     updateMeaning(id: String, word: String!, meaning: Meaning!): Word!
+    voteMeaning(id: String!, Vote: Boolean!): Word!
+    reportMeaning(id: String!, report: UserReport!): Word!
+    reportWord(Characters: String!, report: UserReport!): Word!
   }
 `;

@@ -1,4 +1,7 @@
 const { Schema } = require("mongoose");
+const Vote = require("./UserVote");
+const Status = require("./Status");
+const Report = require("./UserReport");
 const meaningSchema = new Schema({
   Meaning: {
     type: String,
@@ -15,18 +18,13 @@ const meaningSchema = new Schema({
     type: String,
     require: true
   },
-  Status: {
-    type: String,
-    require: true,
-    enum: {
-      values: ["submitted", "approve", "reject", "delete"],
-      message: "{VALUE} is not supported"
-    }
-  },
+  Status: Status,
   IsDictionary: {
     type: Boolean,
     require: true
   },
+  Vote: [Vote],
+  Report: [Report],
   User: {
     type: Schema.Types.ObjectId,
     ref: "User"

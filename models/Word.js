@@ -2,6 +2,8 @@ const { model, Schema } = require("mongoose");
 const meaning = require("./Meaning");
 const Vote = require("./UserVote");
 const Bookmark = require("./Bookmark");
+const Status = require("./Status");
+const Report = require("./UserReport");
 const wordSchema = new Schema({
   Characters: {
     type: String,
@@ -32,11 +34,13 @@ const wordSchema = new Schema({
   },
   Meaning: [meaning],
   Bookmark: [Bookmark],
+  Status: Status,
   User: {
     type: Schema.Types.ObjectId,
     ref: "User"
   },
-  Vote: [Vote]
+  Vote: [Vote],
+  Report: [Report]
 });
 
 module.exports = model("Word", wordSchema);

@@ -52,7 +52,7 @@ module.exports = {
       }
       throw new Error("Word not found!");
     },
-    async vote(_, { Characters, Vote }, context) {
+    async voteWord(_, { Characters, Vote }, context) {
       const user = Authentication(context);
       const word = await Word.findOne({
         Characters: Characters
@@ -81,43 +81,28 @@ module.exports = {
       }
       throw new Error("Word not found!");
     },
-    async updateMeaning(
+    async reportWord(
       _,
       {
-        id,
-        word,
-        meaning: { Meaning, AllocationType, Example, Status, IsDictionary }
+        Characters,
+        report: { Title, Description, Status }
       },
       context
     ) {
       const user = Authentication(context);
-      const savedWord = await Word.findOne({
-        Characters: word
+      const word = await Word.findOne({
+        Characters: Characters
       });
-      const allocationType = await AllocationTypeModel.findOne({
-        Name: AllocationType
-      });
-      if (savedWord !== null && allocationType !== null) {
-        // var wordMeaning = word.Meaning.find(x => x._id === meaning.id);
-        // if (wordMeaning) {
-        //   wordMeaning.meaning = Meaning;
-        //   wordMeaning.AllocationType = AllocationType;
-        //   wordMeaning.Status = Status;
-        //   wordMeaning.Example = Example
-        //   wordMeaning.IsDictionary = IsDictionary;
-        // }
-        savedWord.Meaning.push({
-          Meaning: Meaning,
+      if (word) {
+        word.Report.push({
           Username: user.username,
-          AllocationType: AllocationType,
           CreatedAt: new Date().toISOString(),
-          Status: Status,
-          IsDictionary: IsDictionary,
-          User: mongoose.Types.ObjectId(user.Id),
-          Allocation: mongoose.Types.ObjectId(allocationType._Id)
+          Title: Title,
+          Description: Description,
+          Status: Status
         });
-        await savedWord.save();
-        return savedWord;
+        await word.save();
+        return word;
       }
       throw new Error("Word not found!");
     }

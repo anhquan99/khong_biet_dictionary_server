@@ -1,5 +1,5 @@
 const { Schema } = require("mongoose");
-
+const Status = require("./Status");
 const reportSchema = new Schema({
   Username: {
     type: String,
@@ -17,14 +17,7 @@ const reportSchema = new Schema({
     type: String,
     require: true
   },
-  Status: {
-    type: String,
-    require: true,
-    enum: {
-      values: ["submited", "approve", "reject", "delete"],
-      message: "{VALUE} is not supported"
-    }
-  }
+  Status: Status
 });
 
 module.exports = reportSchema;

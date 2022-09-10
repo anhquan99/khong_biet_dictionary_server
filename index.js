@@ -17,13 +17,17 @@ const resolvers = {
   }
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+async function startServer() {
+  const server = new ApolloServer({ typeDefs, resolvers });
+  await server.start();
+  const app = express();
+  server.applyMiddleware({ app });
 
-const app = express();
-server.applyMiddleware({ app });
+  app.listen(PORT, () =>
+    console.log(
+      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+    )
+  );
+}
 
-app.listen(PORT, () =>
-  console.log(
-    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-  )
-);
+startServer();

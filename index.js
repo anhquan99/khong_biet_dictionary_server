@@ -66,6 +66,7 @@
 // //     console.log(err);
 // //   });
 const express = require("express");
+const env = require("./config");
 const app = express();
 
 app.get("/", (req, res) => {
@@ -78,6 +79,7 @@ app.get("/", (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
+  console.log(env);
   console.log(`App listening on port ${PORT}`);
   console.log("Press Ctrl+C to quit.");
 });

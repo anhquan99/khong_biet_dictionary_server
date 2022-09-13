@@ -3,7 +3,11 @@ const wordResolvers = require("./words");
 const allocationResolvers = require("./allocationTypes");
 const meaningResolvers = require("./meaningTypes");
 const milestoneResolvers = require("./milestones");
+const GraphQLUpload = require("graphql-upload/GraphQLUpload.js");
+const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js");
+
 module.exports = {
+  Upload: GraphQLUpload,
   Query: {
     ...milestoneResolvers.Query,
     ...meaningResolvers.Query,

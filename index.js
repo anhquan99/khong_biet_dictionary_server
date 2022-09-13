@@ -1,21 +1,12 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
 const env = require("./config");
+const resolvers = require("./graphql/resolver");
+const typeDefs = require("./graphql/typeDef");
+const mongoose = require("mongoose");
+const { MONGODB } = require("./config");
+
 const PORT = env.PORT;
-
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => "Hello world!"
-  }
-};
 
 async function startServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
@@ -23,11 +14,20 @@ async function startServer() {
   const app = express();
   server.applyMiddleware({ app });
 
-  app.listen(PORT, () =>
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    )
-  );
+  mongoose
+    .connect(MONGODB, { useNewUrlParser: true })
+    .then(() => {
+      console.log("MongoDB connected");
+      return app.listen(PORT);
+    })
+    .then(res => {
+      console.log(
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+      );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 startServer();

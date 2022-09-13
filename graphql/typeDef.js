@@ -14,7 +14,7 @@ module.exports = gql`
     Level: Int!
     token: String!
   }
-  type File {
+  input File {
     filename: String!
     mimetype: String!
     encoding: String!
@@ -77,7 +77,6 @@ module.exports = gql`
   input milestoneInput {
     MinLevel: Int!
     Title: String!
-    Badge: File!
   }
   type Query {
     getFood: String
@@ -94,6 +93,10 @@ module.exports = gql`
     voteMeaning(id: String!, Vote: Boolean!): Word!
     reportMeaning(id: String!, report: UserReport!): Word!
     reportWord(Characters: String!, report: UserReport!): Word!
-    updateMilestone(id: String, milestone: milestoneInput!): Milestone!
+    updateMilestone(
+      # id: String
+      # milestone: milestoneInput!
+      file: Upload!
+    ): Milestone!
   }
 `;

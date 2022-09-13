@@ -1,5 +1,10 @@
 const { gql } = require("apollo-server");
+const GraphQLUpload = require("graphql-upload/GraphQLUpload.js");
+const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js");
+
 module.exports = gql`
+  scalar Upload
+
   type User {
     Id: ID!
     Username: String!
@@ -8,6 +13,11 @@ module.exports = gql`
     Role: String!
     Level: Int!
     token: String!
+  }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
   type Milestone {
     MinLevel: Int!
@@ -67,7 +77,7 @@ module.exports = gql`
   input milestoneInput {
     MinLevel: Int!
     Title: String!
-    Badge: String!
+    Badge: File!
   }
   type Query {
     getFood: String

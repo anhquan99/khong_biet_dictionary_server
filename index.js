@@ -4,14 +4,31 @@ const env = require("./config");
 const resolvers = require("./graphql/resolver");
 const typeDefs = require("./graphql/typeDef");
 const mongoose = require("mongoose");
-const { MONGODB } = require("./config");
+const { MONGODB, CLIENT } = require("./config");
+const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js");
+const cors = require("cors");
 
 const PORT = env.PORT;
 
 async function startServer() {
-  const server = new ApolloServer({ typeDefs, resolvers });
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    csrfPrevention: true, // see below for more about this
+    cors: {
+      origin: CLIENT
+    },
+    cache: "bounded"
+  });
   await server.start();
   const app = express();
+  app.use(graphqlUploadExpress());
+  app.use(
+    cors({
+      origin: CLIENT
+    })
+  );
+
   server.applyMiddleware({ app });
 
   mongoose

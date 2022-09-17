@@ -14,11 +14,6 @@ module.exports = gql`
     Level: Int!
     token: String!
   }
-  input File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
   type Milestone {
     MinLevel: Int!
     Title: String!
@@ -95,7 +90,7 @@ module.exports = gql`
     reportWord(Characters: String!, report: UserReport!): Word!
     updateMilestone(
       # id: String
-      # milestone: milestoneInput!
+      milestone: milestoneInput!
       file: Upload!
     ): Milestone!
   }

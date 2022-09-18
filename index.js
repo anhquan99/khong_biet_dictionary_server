@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const { MONGODB, CLIENT } = require("./config");
 const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js");
 const cors = require("cors");
+const { MongoClient, GridFSBucket } = require("mongodb");
 
 const PORT = env.PORT;
 
@@ -18,7 +19,8 @@ async function startServer() {
     cors: {
       origin: CLIENT
     },
-    cache: "bounded"
+    cache: "bounded",
+    context: ({ req }) => ({ req })
   });
   await server.start();
   const app = express();
@@ -28,6 +30,25 @@ async function startServer() {
       origin: CLIENT
     })
   );
+  app.get("/image", (req, res) => {
+    var client = new MongoClient(env.MONGODB);
+    const db = client.db(env.Database);
+    const bucket = new GridFSBucket(db);
+    var rstream = bucket.openDownloadStreamByName(req.query.imageName);
+    var buffs = [];
+    rstream
+      .on("data", chunk => {
+        buffs.push(chunk);
+      })
+      .on("error", err => {
+        throw new Error(err);
+      })
+      .on("end", () => {
+        var fbuff = Buffer.concat(buffs);
+        var File = fbuff.toString("base64");
+        res.send(File);
+      });
+  });
 
   server.applyMiddleware({ app });
 

@@ -1,10 +1,8 @@
 const { gql } = require("apollo-server");
-const GraphQLUpload = require("graphql-upload/GraphQLUpload.js");
-const graphqlUploadExpress = require("graphql-upload/graphqlUploadExpress.js");
 
 module.exports = gql`
   scalar Upload
-
+  scalar MilestoneFile
   type User {
     Id: ID!
     Username: String!
@@ -14,10 +12,15 @@ module.exports = gql`
     Level: Int!
     token: String!
   }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
   type Milestone {
     MinLevel: Int!
     Title: String!
-    Badge: String!
+    File: File
   }
   type Word {
     Id: ID!
@@ -77,6 +80,8 @@ module.exports = gql`
     getFood: String
     login(Username: String!, Password: String!): User!
     findWord(lookupWord: String!): Word!
+    getSingleMilestone(Name: String!): MilestoneFile
+    getAllMilestone: [Milestone]
   }
   type Mutation {
     register(userInput: UserInput!): User!
@@ -88,8 +93,9 @@ module.exports = gql`
     voteMeaning(id: String!, Vote: Boolean!): Word!
     reportMeaning(id: String!, report: UserReport!): Word!
     reportWord(Characters: String!, report: UserReport!): Word!
+    addMilestone(milestone: milestoneInput!, file: Upload!): Milestone
     updateMilestone(
-      # id: String
+      id: String
       milestone: milestoneInput!
       file: Upload!
     ): Milestone!

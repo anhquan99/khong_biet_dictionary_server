@@ -1,42 +1,47 @@
 const Milestone = require("../../models/Milestone");
 const Authentication = require("../../Authentication/Authentication");
-const mongoose = require("mongoose");
 const { MongoClient, GridFSBucket } = require("mongodb");
-const { finished } = require("stream");
 const GraphQLUpload = require("graphql-upload/GraphQLUpload.js");
 const { MONGODB, Database } = require("./../../config");
 
 module.exports = {
   Upload: GraphQLUpload,
-  Query: {},
+  Query: {
+    async getAllMilestone(_, context) {
+      const user = Authentication(context);
+      return await Milestone.find();
+    }
+  },
   Mutation: {
-    async updateMilestone(
+    async addMilestone(
       _,
       {
-        id,
         milestone: { MinLevel, Title },
         file
       },
       context
     ) {
       const user = Authentication(context);
-      var savedMilestone;
-      if (id) {
-        savedMilestone = await Milestone.findOne({ _id: id });
-      }
-      if (!savedMilestone) {
-        savedMilestone = new Milestone({
-          MinLevel: MinLevel,
-          Title: Title
-        });
-      }
+      var savedMilestone = new Milestone({
+        MinLevel: MinLevel,
+        Title: Title,
+        File: {}
+      });
+
+      // save file to db
       var client = new MongoClient(MONGODB);
       const db = client.db(Database);
-      console.log("db connected");
       const bucket = new GridFSBucket(db);
       const { createReadStream, filename, mimetype, encoding } = await file;
       const stream = createReadStream();
-      console.log(filename, mimetype, encoding);
+      let result;
+
+      savedMilestone.MinLevel = MinLevel;
+      savedMilestone.Title = Title;
+      savedMilestone.File = { filename, mimetype, encoding };
+
+      result = await savedMilestone.save();
+
       stream
         .pipe(
           bucket.openUploadStream(filename, {
@@ -46,16 +51,69 @@ module.exports = {
         )
         .on("error", err => {
           client.close();
-          console.log(err);
+          savedMilestone.delete();
+          throw err;
         })
         .on("finish", () => {
           client.close();
         });
 
-      savedMilestone.MinLevel = MinLevel;
+      return result;
+    },
+    async updateMilestone(
+      _,
+      {
+        minLv,
+        milestone: { MinLevel, Title },
+        file
+      },
+      context
+    ) {
+      const user = Authentication(context);
+      var savedMilestone = await Milestone.findOne({ MinLevel: MinLevel });
+
+      var client = new MongoClient(MONGODB);
+      const db = client.db(Database);
+      const bucket = new GridFSBucket(db);
+      const { createReadStream, filename, mimetype, encoding } = await file;
+      const stream = createReadStream();
+
+      // if save file fail this will backup the old one
+      var backupMilestone = { ...savedMilestone };
+
       savedMilestone.Title = Title;
-      savedMilestone.Badge = filename;
-      const result = await savedMilestone.save();
+      savedMilestone.File.filename = filename;
+      savedMilestone.File.mimetype = mimetype;
+      savedMilestone.File.encoding = encoding;
+
+      let result = await savedMilestone.save();
+
+      stream
+        .pipe(
+          bucket.openUploadStream(filename, {
+            chunkSizeBytes: 1048576,
+            metadata: { mimetype: mimetype, encoding: encoding }
+          })
+        )
+        .on("error", err => {
+          client.close();
+          savedMilestone = backupMilestone;
+          savedMilestone.save();
+          throw err;
+        })
+        .on("finish", () => {
+          if (!client) {
+            client = new MongoClient(MONGODB);
+            db = client.db(Database);
+            const cursor = bucket.find({
+              filename: savedMilestone.File.filename
+            });
+            cursor.forEach(doc => {
+              bucket.delete(doc._id);
+            });
+          }
+          client.close();
+        });
       return result;
     }
   }

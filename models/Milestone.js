@@ -1,5 +1,20 @@
 const { model, Schema } = require("mongoose");
 
+const fileSchema = new Schema({
+  filename: {
+    type: String,
+    require: true,
+    unique: true
+  },
+  mimetype: {
+    type: String,
+    require: true
+  },
+  encoding: {
+    type: String,
+    require: true
+  }
+});
 const milestoneSchema = new Schema({
   MinLevel: {
     type: Number,
@@ -11,11 +26,7 @@ const milestoneSchema = new Schema({
     require: true,
     unique: true
   },
-  Badge: {
-    type: String,
-    require: true,
-    unique: true
-  }
+  File: fileSchema
 });
-milestoneSchema.index({ MinLevel: 1, Title: 1, Badge: 1 }, { unique: true });
+milestoneSchema.index({ MinLevel: 1, Title: 1 }, { unique: true });
 module.exports = model("milestones", milestoneSchema);

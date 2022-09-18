@@ -1,39 +1,44 @@
 const { gql } = require("apollo-server");
+
 module.exports = gql`
+  scalar Upload
+  scalar MilestoneFile
   type User {
-    ID: ID!
+    Id: ID!
     Username: String!
     Email: String!
     Password: String!
     Role: String!
     Level: Int!
+    token: String!
+  }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
   type Milestone {
     MinLevel: Int!
     Title: String!
-    Badge: String!
+    File: File
   }
   type Word {
-    ID: ID!
+    Id: ID!
     Characters: String!
-    UserID: String!
-    CreatedDate: String!
-    NumberOfSearch: BigInt!
+    Username: String!
+    CreatedAt: String!
+    NumberOfSearch: Int!
     IsDictionary: Boolean!
   }
   type Pharse {
     Characters: String!
     Words: [Word]!
   }
-  type Meaning {
-    ID: ID!
-    WordID: ID!
-    UserID: ID!
+  input Meaning {
     Meaning: String!
-    AllocationType: ID!
+    AllocationType: String!
     Example: [String]
-    CreatedDate: String!
-    Status: Int!
+    Status: String!
     IsDictionary: Boolean!
   }
   type BookMark {
@@ -41,14 +46,12 @@ module.exports = gql`
     WordID: ID!
   }
   type AllocationType {
-    ID: ID!
     Name: String!
   }
-  type UserReport {
-    ID: ID!
-    UserID: ID!
+  input UserReport {
+    Title: String!
     Description: String!
-    IsValid: Boolean
+    Status: String!
   }
   type UserVote {
     UserID: ID!
@@ -56,10 +59,45 @@ module.exports = gql`
     EntityVoteID: ID!
     IsUpVote: Boolean
   }
-  type Query{
-
+  input UserInput {
+    Username: String!
+    Email: String!
+    Password: String!
+    Role: String!
   }
-  type Mutation{
-    
+  input MeaningInput {
+    id: String
+    meaning: String!
+    allocationType: String!
+    status: String!
+    isDictionary: Boolean!
+  }
+  input milestoneInput {
+    MinLevel: Int!
+    Title: String!
+  }
+  type Query {
+    getFood: String
+    login(Username: String!, Password: String!): User!
+    findWord(lookupWord: String!): Word!
+    getSingleMilestone(Name: String!): MilestoneFile
+    getAllMilestone: [Milestone]
+  }
+  type Mutation {
+    register(userInput: UserInput!): User!
+    createWord(Characters: String!): Word!
+    bookmark(Characters: String!): Word!
+    voteWord(Characters: String!, Vote: Boolean!): Word!
+    updateAllocationType(id: String, allocation: String!): AllocationType!
+    updateMeaning(id: String, word: String!, meaning: Meaning!): Word!
+    voteMeaning(id: String!, Vote: Boolean!): Word!
+    reportMeaning(id: String!, report: UserReport!): Word!
+    reportWord(Characters: String!, report: UserReport!): Word!
+    addMilestone(milestone: milestoneInput!, file: Upload!): Milestone
+    updateMilestone(
+      id: String
+      milestone: milestoneInput!
+      file: Upload!
+    ): Milestone!
   }
 `;

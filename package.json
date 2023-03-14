@@ -5,23 +5,25 @@
   "main": "index.js",
   "scripts": {
     "dev": "set NODE_ENV=dev&& nodemon index",
-    "start": "node index",
+    "start:build": "tsc -w",
+    "start:run": "nodemon ./build/",
+    "start": "concurrently npm:start:*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.9.0",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^7.6.0",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "graphql": "^16.5.0",
-    "graphql-upload": "^14.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.4.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.21",
+    "typescript": "^4.9.5"
   }
 }

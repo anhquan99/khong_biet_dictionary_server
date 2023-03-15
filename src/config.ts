@@ -5,7 +5,7 @@ dotenv.config({
     path: path.resolve(__dirname, `${process.env.NODE_ENV}.env`)
 });
 
-export var env = {
+export const env = {
     NODE_ENV: process.env.NODE_ENV || "dev",
     HOST: process.env.HOST || "localhost",
     PORT: process.env.PORT || 3000,

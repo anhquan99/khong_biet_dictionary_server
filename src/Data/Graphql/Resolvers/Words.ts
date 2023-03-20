@@ -1,7 +1,7 @@
 import { WordModel } from "../../Schema/Word";
 import mongoose from "mongoose";    
 
-export const resolvers = {
+export const Words = {
     Query:{
         async findWord(): Promise<string> {
             return "Hello";

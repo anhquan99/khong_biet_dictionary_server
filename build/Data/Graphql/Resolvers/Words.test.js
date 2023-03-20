@@ -9,21 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Words = void 0;
-exports.Words = {
-    Query: {
-        findWord() {
-            return __awaiter(this, void 0, void 0, function* () {
-                return "Hello";
-            });
-        }
-    },
-    Mutation: {
-        createWord(_, { newWord }) {
-            return __awaiter(this, void 0, void 0, function* () {
-                console.log(newWord);
-                return newWord;
-            });
-        }
-    }
-};
+const globals_1 = require("@jest/globals");
+const Words_1 = require("./Words");
+(0, globals_1.describe)('Query words', () => {
+    (0, globals_1.test)('Query find word', () => __awaiter(void 0, void 0, void 0, function* () {
+        var data = yield Words_1.Words.Query.findWord();
+        (0, globals_1.expect)(data).toBe("Hello");
+    }));
+});
+(0, globals_1.describe)("Mutation words", () => {
+    (0, globals_1.test)("Create a word", () => {
+        (0, globals_1.expect)(Words_1.Words.Mutation.createWord({ context: "data" }, { newWord: "anhquan" })).toBe("anhquan");
+    });
+});

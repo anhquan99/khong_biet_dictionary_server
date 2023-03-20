@@ -4,7 +4,7 @@ import {startStandaloneServer} from '@apollo/server/standalone';
 import mongoose from 'mongoose';
 
 import {env} from './config';
-import { resolvers } from './Data/Graphql/Resolvers/Words';
+import { resolvers } from './Data/Graphql/Resolvers/Index';
 import {typeDefs} from './Data/Graphql/typeDef';
 
 async function startServer(){
@@ -15,7 +15,7 @@ async function startServer(){
         cache: "bounded"
     });
     
-    const {url} = await startStandaloneServer(server, {listen: {port: env.PORT}});
+    const {url} = await startStandaloneServer(server, {listen: {port: env.PORT});
     console.log(`Server is running on ${url}`)
 }
 startServer();

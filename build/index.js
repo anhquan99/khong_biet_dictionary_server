@@ -12,13 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("@apollo/server");
 const standalone_1 = require("@apollo/server/standalone");
 const config_1 = require("./config");
-const Words_1 = require("./Data/Graphql/Resolvers/Words");
+const Index_1 = require("./Data/Graphql/Resolvers/Index");
 const typeDef_1 = require("./Data/Graphql/typeDef");
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {
         const server = new server_1.ApolloServer({
             typeDefs: typeDef_1.typeDefs,
-            resolvers: Words_1.resolvers,
+            resolvers: Index_1.resolvers,
             csrfPrevention: true,
             cache: "bounded"
         });

@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("@apollo/server");
 const standalone_1 = require("@apollo/server/standalone");
+const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = require("./config");
 const Index_1 = require("./Data/Graphql/Resolvers/Index");
 const typeDef_1 = require("./Data/Graphql/typeDef");
@@ -22,7 +26,12 @@ function startServer() {
             csrfPrevention: true,
             cache: "bounded"
         });
-        const { url } = yield (0, standalone_1.startStandaloneServer)(server, { listen: { port: config_1.env.PORT } });
+        mongoose_1.default.connect(config_1.env.MONGODB).then(() => {
+            console.log("Mongodb connected");
+        }).catch(err => {
+            console.log(err);
+        });
+        const { url } = yield (0, standalone_1.startStandaloneServer)(server, { listen: { port: +config_1.env.PORT } });
         console.log(`Server is running on ${url}`);
     });
 }

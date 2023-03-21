@@ -1,6 +1,6 @@
 export const typeDefs = `#graphql
   type Query {
-    findWord: String!
+    findWord(keyword: String): [String]
   }
   type Mutation {
     createWord(newWord: String): String

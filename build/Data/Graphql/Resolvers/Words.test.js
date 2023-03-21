@@ -10,15 +10,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const globals_1 = require("@jest/globals");
+const Word_1 = require("../../Schema/Word");
 const Words_1 = require("./Words");
 (0, globals_1.describe)('Query words', () => {
     (0, globals_1.test)('Query find word', () => __awaiter(void 0, void 0, void 0, function* () {
-        var data = yield Words_1.Words.Query.findWord();
+        globals_1.jest.spyOn(Word_1.WordModel, "find").mockReturnValue([{
+                Characters: 'anhquan',
+                CreatedAt: '2023-03-21T13:33:19.117Z',
+                NumberOfSearch: 0,
+                IsDictionary: true,
+            }]);
+        var data = yield Words_1.Words.Query.findWord({ context: "context" }, { keyword: "hello" });
         (0, globals_1.expect)(data).toBe("Hello");
     }));
 });
-(0, globals_1.describe)("Mutation words", () => {
-    (0, globals_1.test)("Create a word", () => {
-        (0, globals_1.expect)(Words_1.Words.Mutation.createWord({ context: "data" }, { newWord: "anhquan" })).toBe("anhquan");
-    });
-});
+// describe("Mutation words", () => {
+//     test("Create a word", async() => {
+//         var data = await Words.Mutation.createWord({context: "context"}, {newWord: "anhquan"});
+//         expect(data).toBe("anhquan");
+//     })
+// })

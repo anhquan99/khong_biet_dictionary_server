@@ -14,8 +14,12 @@ async function startServer(){
         csrfPrevention: true,
         cache: "bounded"
     });
-    
-    const {url} = await startStandaloneServer(server, {listen: {port: env.PORT});
+    mongoose.connect(env.MONGODB).then(() => {
+        console.log("Mongodb connected");
+    }).catch(err => {
+        console.log(err);
+    })
+    const {url} = await startStandaloneServer(server, {listen: {port: + env.PORT}});
     console.log(`Server is running on ${url}`)
 }
 startServer();

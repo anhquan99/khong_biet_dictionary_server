@@ -3,14 +3,24 @@ import mongoose from "mongoose";
 
 export const Words = {
     Query:{
-        async findWord(): Promise<string> {
-            return "Hello";
+        async findWord(_ : any, {keyword}: {keyword: string}) {
+            const result = await WordModel.find({Characters: keyword});
+            console.log(result);
+            var resultArr = result.map(x => x.Characters);
+            console.log(resultArr);
+            return resultArr;
         }
     },
     Mutation:{
-        async createWord(_ : any, {newWord}:{newWord : string}): Promise<string>{
-            console.log(newWord);
-            return newWord;
+        async createWord(_ : any, {newWord}:{newWord : string}){
+            const word = new WordModel({
+                Characters: newWord,
+                CreatedAt: new Date().toISOString(),
+                NumberOfSearch: 0,
+                IsDictionary: true
+            });
+            const result = await word.save();
+            return result.Characters;
         }
     }
 };

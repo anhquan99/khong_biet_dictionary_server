@@ -10,19 +10,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Words = void 0;
+const Word_1 = require("../../Schema/Word");
 exports.Words = {
     Query: {
-        findWord() {
+        findWord(_, { keyword }) {
             return __awaiter(this, void 0, void 0, function* () {
-                return "Hello";
+                const result = yield Word_1.WordModel.find({ Characters: keyword });
+                console.log(result);
+                var resultArr = result.map(x => x.Characters);
+                console.log(resultArr);
+                return resultArr;
             });
         }
     },
     Mutation: {
         createWord(_, { newWord }) {
             return __awaiter(this, void 0, void 0, function* () {
-                console.log(newWord);
-                return newWord;
+                const word = new Word_1.WordModel({
+                    Characters: newWord,
+                    CreatedAt: new Date().toISOString(),
+                    NumberOfSearch: 0,
+                    IsDictionary: true
+                });
+                const result = yield word.save();
+                return result.Characters;
             });
         }
     }

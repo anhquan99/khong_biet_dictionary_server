@@ -1,4 +1,4 @@
-
 *.bkp
 *.dtmp
 node_modules
+docker_volumes/*

@@ -1,4 +1,4 @@
-export const typeDefs = `#graphql
+const typeDefs = `#graphql
   type Query {
     findWord(keyword: String): [String]
   }
@@ -6,3 +6,4 @@ export const typeDefs = `#graphql
     createWord(newWord: String): String
   }
 `;
+export default typeDefs;

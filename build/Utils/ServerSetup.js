@@ -12,30 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Words = void 0;
-const Word_1 = __importDefault(require("../../Schema/Word"));
-exports.Words = {
-    Query: {
-        findWord(_, { keyword }) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const result = yield Word_1.default.find({ Characters: keyword });
-                var resultArr = result.map(x => x.Characters);
-                return resultArr;
+const server_1 = require("@apollo/server");
+const typeDef_1 = __importDefault(require("../Graphql/TypeDef/typeDef"));
+const Index_1 = __importDefault(require("../Graphql/Resolvers/Index"));
+const DbSetup_1 = __importDefault(require("./DbSetup"));
+function startServer() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const server = new server_1.ApolloServer({
+                typeDefs: typeDef_1.default,
+                resolvers: Index_1.default,
+                csrfPrevention: true,
+                cache: "bounded"
             });
+            yield (0, DbSetup_1.default)();
+            server.start();
         }
-    },
-    Mutation: {
-        createWord(_, { newWord }) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const word = new Word_1.default({
-                    Characters: newWord,
-                    CreatedAt: new Date().toISOString(),
-                    NumberOfSearch: 0,
-                    IsDictionary: true
-                });
-                const result = yield word.save();
-                return result.Characters;
-            });
+        catch (err) {
+            console.log(err);
+            return;
         }
-    }
-};
+    });
+}
+exports.default = startServer;

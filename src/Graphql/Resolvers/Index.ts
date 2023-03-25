@@ -1,5 +1,5 @@
 import {Words} from "./Words";
-export const resolvers = {
+const resolvers = {
     Query:{
         ...Words.Query,
     },
@@ -7,3 +7,4 @@ export const resolvers = {
         ...Words.Mutation
     }
 };
+export default resolvers;

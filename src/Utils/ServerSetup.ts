@@ -1,6 +1,6 @@
 import express, {Express} from 'express';
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/dist/esm/standalone';
+import { startStandaloneServer } from '@apollo/server/standalone';
 
 import env from './Config'
 import typeDefs from '../Graphql/TypeDef/typeDef';
@@ -17,8 +17,12 @@ async function startServer() : Promise<void>
             csrfPrevention: true,
             cache: "bounded"
         });
+        const {url} = await startStandaloneServer(server, {
+            listen: {port: + env.PORT}
+        });
         await connectDb();
-        server.start();
+        console.log(`Server is running on ${url}`);
+        
     }
     catch(err)
     {

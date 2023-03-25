@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("@apollo/server");
+const standalone_1 = require("@apollo/server/standalone");
+const Config_1 = __importDefault(require("./Config"));
 const typeDef_1 = __importDefault(require("../Graphql/TypeDef/typeDef"));
 const Index_1 = __importDefault(require("../Graphql/Resolvers/Index"));
 const DbSetup_1 = __importDefault(require("./DbSetup"));
@@ -25,8 +27,11 @@ function startServer() {
                 csrfPrevention: true,
                 cache: "bounded"
             });
+            const { url } = yield (0, standalone_1.startStandaloneServer)(server, {
+                listen: { port: +Config_1.default.PORT }
+            });
             yield (0, DbSetup_1.default)();
-            server.start();
+            console.log(`Server is running on ${url}`);
         }
         catch (err) {
             console.log(err);

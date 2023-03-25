@@ -21,6 +21,7 @@ const options = {
 };
 function connectDb() {
     return __awaiter(this, void 0, void 0, function* () {
+        mongoose_1.default.set('strictQuery', true);
         yield mongoose_1.default.connect(Config_1.default.MONGODB, options).then(() => {
             console.log("Database connected");
         }).catch((err) => {

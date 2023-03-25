@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 import env from './Config'
 
@@ -10,6 +10,7 @@ const options = {
 
 async function connectDb() : Promise<void>
 {
+    mongoose.set('strictQuery', true);
     await mongoose.connect(env.MONGODB, options).then(() => {
         console.log("Database connected");
     }).catch((err) => {

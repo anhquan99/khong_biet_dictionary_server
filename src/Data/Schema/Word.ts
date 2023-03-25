@@ -34,4 +34,5 @@ const wordSchema = new Schema({
         ref: "User"
       }
 });
-export const WordModel =  model("Word", wordSchema);
+const WordModel =  model("Word", wordSchema);
+export default WordModel;

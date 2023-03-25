@@ -8,17 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Words = void 0;
-const Word_1 = require("../../Schema/Word");
+const Word_1 = __importDefault(require("../../Schema/Word"));
 exports.Words = {
     Query: {
         findWord(_, { keyword }) {
             return __awaiter(this, void 0, void 0, function* () {
-                const result = yield Word_1.WordModel.find({ Characters: keyword });
-                console.log(result);
+                const result = yield Word_1.default.find({ Characters: keyword });
                 var resultArr = result.map(x => x.Characters);
-                console.log(resultArr);
+                console.log(typeof (result));
+                console.log(result);
                 return resultArr;
             });
         }
@@ -26,7 +29,7 @@ exports.Words = {
     Mutation: {
         createWord(_, { newWord }) {
             return __awaiter(this, void 0, void 0, function* () {
-                const word = new Word_1.WordModel({
+                const word = new Word_1.default({
                     Characters: newWord,
                     CreatedAt: new Date().toISOString(),
                     NumberOfSearch: 0,

@@ -1,13 +1,11 @@
-import { WordModel } from "../../Schema/Word";
+import WordModel from "../../Schema/Word";
 import mongoose from "mongoose";    
 
 export const Words = {
     Query:{
-        async findWord(_ : any, {keyword}: {keyword: string}) {
+        async findWord(_ : any, {keyword}: {keyword: string}){
             const result = await WordModel.find({Characters: keyword});
-            console.log(result);
             var resultArr = result.map(x => x.Characters);
-            console.log(resultArr);
             return resultArr;
         }
     },

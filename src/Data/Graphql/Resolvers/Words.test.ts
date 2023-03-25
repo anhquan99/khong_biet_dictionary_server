@@ -1,25 +1,32 @@
 import {describe, expect, jest, test} from '@jest/globals';
-import { WordModel } from '../../Schema/Word';
+import WordModel from '../../Schema/Word';
 import { Words } from "./Words";
+
+const mockWord = {
+    Characters: "anhquan",
+    CreatedAt: new Date().toISOString(),
+    NumberOfSearch: 0,
+    IsDictionary: true
+}
+
+beforeAll(() => {
+    jest.spyOn(WordModel.prototype, 'save').mockReturnValue(mockWord as any);
+    jest.spyOn(WordModel, "find").mockReturnValue([mockWord] as any);
+});
+afterAll(() => {
+    jest.restoreAllMocks();
+})
 
 describe('Query words', () => {
     test('Query find word', async () => {
-        jest.spyOn(WordModel, "find").mockReturnValue(
-        [{
-            Characters: 'anhquan',
-            CreatedAt: '2023-03-21T13:33:19.117Z',
-            NumberOfSearch: 0,
-            IsDictionary: true,
-        }]
-            );
-        var data = await Words.Query.findWord({context: "context"}, {keyword: "hello"});
-        expect(data).toBe("Hello");
+        const result = await Words.Query.findWord({context: "context"}, {keyword: "anhquan"});
+        expect(result[0]).toBe(mockWord.Characters);
     });
 });
 
-// describe("Mutation words", () => {
-//     test("Create a word", async() => {
-//         var data = await Words.Mutation.createWord({context: "context"}, {newWord: "anhquan"});
-//         expect(data).toBe("anhquan");
-//     })
-// })
+describe("Mutation words", () => {
+    test("Create a word", async() => {
+        const result = await Words.Mutation.createWord({context: "context"}, {newWord: "anhquan"});
+        expect(result).toBe(mockWord.Characters);
+    })
+})

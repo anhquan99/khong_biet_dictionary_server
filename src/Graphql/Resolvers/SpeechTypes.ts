@@ -7,15 +7,15 @@ async function findSpeechType(speechTypeName : string){
     });
     return result;
 }
-async function createSpeechType(speechTypeName : string, creatorId : string){
-    const newSpeechType = new SpeechTypeModel({
-        Name : speechTypeName,
-        // Creator : mongoose.Schema.Types.ObjectId(creatorId),
-        CreatedAt : new Date().toISOString()
-    });
-    await newSpeechType.save();
-    return newSpeechType;
-}
+// async function createSpeechType(speechTypeName : string, creatorId : string){
+//     const newSpeechType = new SpeechTypeModel({
+//         Name : speechTypeName,
+//         // Creator : mongoose.Schema.Types.ObjectId(creatorId),
+//         CreatedAt : new Date().toISOString()
+//     });
+//     await newSpeechType.save();
+//     return newSpeechType;
+// }
 
 const SpeechTypes = {
     Query : {
@@ -25,9 +25,11 @@ const SpeechTypes = {
         }
     },
     Mutation : {
-        async createSpeechType(_ : any, {speechTypeName} : {speechTypeName : string}){
-            const result = await createSpeechType(speechTypeName, "001");
-            return result;
-        }
+    //     async createSpeechType(_ : any, {speechTypeName} : {speechTypeName : string}){
+    //         const result = await createSpeechType(speechTypeName, "001");
+    //         return result;
+    //     }
     }
 }
+
+export default SpeechTypes;

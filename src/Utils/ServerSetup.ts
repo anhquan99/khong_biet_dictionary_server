@@ -1,27 +1,46 @@
-import express, {Express} from 'express';
+import express, {Express, Request} from 'express';
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
+import http from 'http';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
+import {expressMiddleware} from '@apollo/server/express4';
 
 import env from './Config'
 import typeDefs from '../Graphql/TypeDef/typeDef';
 import resolvers from '../Graphql/Resolvers/Index';
 import connectDb from './DbSetup';
+import {AuthContext} from '../Middlewares/Token'
 
 async function startServer() : Promise<void> 
 {
     try
     {
-        const server = new ApolloServer({
+        const app : Express = express();
+        const httpServer = http.createServer(app);
+        const server = new ApolloServer<AuthContext>({
             typeDefs,
             resolvers,
             csrfPrevention: true,
-            cache: "bounded"
+            cache: "bounded",
+            plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
         });
-        const {url} = await startStandaloneServer(server, {
-            listen: {port: + env.PORT}
-        });
+
+        await server.start();
+
+        app.use(
+            '/',
+            cors<cors.CorsRequest>(),
+            bodyParser.json({limit : '50mb'}),
+            expressMiddleware(server, {
+                context : async ({req }) => ({req})
+            })
+        )
         await connectDb();
-        console.log(`Server is running on ${url}`);
+
+        await new Promise<void>((resolve) => httpServer.listen({port : env.PORT}, resolve));
+
+        console.log(`Server is running on http://${env.HOST}:${env.PORT}`);
         
     }
     catch(err)

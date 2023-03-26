@@ -16,7 +16,9 @@
   "dependencies": {
     "@apollo/server": "^4.5.0",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
     "concurrently": "^7.6.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "graphql": "^16.6.0",
@@ -26,8 +28,12 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.21.0",
     "@jest/globals": "^29.5.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/validator": "^13.7.14",
     "jest": "^29.5.0",
     "nodemon": "^2.0.21",
     "ts-jest": "^29.0.5",

@@ -12,30 +12,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Word_1 = __importDefault(require("../Schema/Word"));
-const Words = {
+const SpeechType_1 = __importDefault(require("../Schema/SpeechType"));
+function findSpeechType(speechTypeName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield SpeechType_1.default.find({
+            Name: name
+        });
+        return result;
+    });
+}
+function createSpeechType(speechTypeName, creatorId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const newSpeechType = new SpeechType_1.default({
+            Name: speechTypeName,
+            // Creator : mongoose.Schema.Types.ObjectId(creatorId),
+            CreatedAt: new Date().toISOString()
+        });
+        yield newSpeechType.save();
+        return newSpeechType;
+    });
+}
+const SpeechTypes = {
     Query: {
-        findWord(_, { keyword }) {
+        findSpeechType(_, { speechTypeName }) {
             return __awaiter(this, void 0, void 0, function* () {
-                const result = yield Word_1.default.find({ Characters: keyword });
-                var resultArr = result.map(x => x.Characters);
-                return resultArr;
+                const result = yield findSpeechType(speechTypeName);
+                return result;
             });
         }
     },
     Mutation: {
-        createWord(_, { newWord }) {
+        createSpeechType(_, { speechTypeName }) {
             return __awaiter(this, void 0, void 0, function* () {
-                const word = new Word_1.default({
-                    Characters: newWord,
-                    CreatedAt: new Date().toISOString(),
-                    NumberOfSearch: 0,
-                    IsDictionary: true
-                });
-                const result = yield word.save();
-                return result.Characters;
+                const result = yield createSpeechType(speechTypeName, "001");
+                return result;
             });
         }
     }
 };
-exports.default = Words;

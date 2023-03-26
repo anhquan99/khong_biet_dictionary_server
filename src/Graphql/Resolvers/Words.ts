@@ -1,7 +1,7 @@
 import WordModel from "../Schema/Word";
 import mongoose from "mongoose";    
 
-export const Words = {
+const Words = {
     Query:{
         async findWord(_ : any, {keyword}: {keyword: string}){
             const result = await WordModel.find({Characters: keyword});
@@ -22,3 +22,5 @@ export const Words = {
         }
     }
 };
+
+export default Words;

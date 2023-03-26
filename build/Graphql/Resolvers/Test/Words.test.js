@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const globals_1 = require("@jest/globals");
-const Word_1 = __importDefault(require("../Schema/Word"));
-const Words_1 = __importDefault(require("./Words"));
+const Word_1 = __importDefault(require("../../Schema/Word"));
+const Words_1 = __importDefault(require("../Words"));
 const mockWord = {
     Characters: "anhquan",
     CreatedAt: new Date().toISOString(),

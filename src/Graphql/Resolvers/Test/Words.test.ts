@@ -1,6 +1,6 @@
 import {describe, expect, jest, test} from '@jest/globals';
-import WordModel from '../Schema/Word';
-import { Words } from "./Words";
+import WordModel from '../../Schema/Word';
+import Words  from "../Words";
 
 const mockWord = {
     Characters: "anhquan",

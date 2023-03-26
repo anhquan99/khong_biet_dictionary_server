@@ -1,4 +1,4 @@
-import {Words} from "./Words";
+import Words from "./Words";
 const resolvers = {
     Query:{
         ...Words.Query,

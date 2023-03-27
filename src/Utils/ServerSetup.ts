@@ -8,7 +8,7 @@ import {expressMiddleware} from '@apollo/server/express4';
 
 import env from './Config'
 import typeDefs from '../Graphql/TypeDef/typeDef';
-import resolvers from '../Graphql/Resolvers/Index';
+import resolvers from '../Graphql/Resolvers/Implement/Index';
 import connectDb from './DbSetup';
 import {AuthContext} from '../Middlewares/Token'
 

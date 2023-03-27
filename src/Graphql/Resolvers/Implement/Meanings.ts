@@ -1,4 +1,4 @@
-import MeaningModel from "../Schema/Meaning";
+import MeaningModel from "../../Schema/Meaning";
 import mongoose from "mongoose";
 
 async function findMeaning(meaning : string)

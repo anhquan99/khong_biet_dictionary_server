@@ -1,4 +1,4 @@
-import PharseModel from "../Schema/Pharse";
+import PharseModel from "../../Schema/Pharse";
 import mongoose from "mongoose";
 
 async function findPharse(pharse : string){

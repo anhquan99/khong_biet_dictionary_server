@@ -1,4 +1,4 @@
-import SpeechTypeModel from "../Schema/SpeechType";
+import SpeechTypeModel from "../../Schema/SpeechType";
 import mongoose from "mongoose";
 
 async function findSpeechType(speechTypeName : string){

@@ -1,4 +1,4 @@
-import WordModel from "../Schema/Word";
+import WordModel from "../../Schema/Word";
 import mongoose from "mongoose";    
 
 const Words = {

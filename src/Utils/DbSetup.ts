@@ -2,7 +2,7 @@ import mongoose, { mongo } from "mongoose";
 
 import env from './Config'
 
-const options = {
+export const options = {
     autoIndex: env.ENABLE_INDEX_DB, 
     dbName: env.DATABASE,
     maxPoolSize: 10

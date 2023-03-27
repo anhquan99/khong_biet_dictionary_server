@@ -6,7 +6,7 @@ dotenv.config({
 });
 const dbUser = process.env.dbUser || "root";
 const dbPassword = process.env.dbPassword || "password";
-const enableIndexDb = process.env.NODE_ENV === 'prod';
+const enableIndexDb = true;
 const env = {
     NODE_ENV: process.env.NODE_ENV || "dev",
     HOST: process.env.HOST || "localhost",

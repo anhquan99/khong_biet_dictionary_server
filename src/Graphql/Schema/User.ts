@@ -1,23 +1,24 @@
 import { validate } from 'graphql';
 import {model, Schema} from 'mongoose';
 
-import { MaxStringLength, InvalidField } from '../../Enums/ErrorMessageEnum';
+import { MaxStringLength, InvalidField, MinStringLength } from '../../Enums/ErrorMessageEnum';
 import { ValidateEmail, ValidatePassword } from '../../Validations/UserValidation';
-import { roleEnum, _maxStringLength } from '../../Enums/SchemaEnum';
+import { roleEnum, _maxStringLength, _minStringLength } from '../../Enums/SchemaEnum';
 
 
 
 const userSchema = new Schema({
     Username: {
         type: String,
-        require: [true, "Username is required"],
-        max: [_maxStringLength, MaxStringLength("username", _maxStringLength)],
+        require: true,
+        minLength : [_minStringLength, MinStringLength("username", _minStringLength)],
+        maxLength : [_maxStringLength, MaxStringLength("username", _maxStringLength)],
         unique: true,
     },
     Email:{
         type: String,
         require: true,
-        max: [_maxStringLength, MaxStringLength("email", _maxStringLength)],
+        maxLength: [_maxStringLength, MaxStringLength("email", _maxStringLength)],
         unique: true,
         validate:{
             validator: (email : string) => {
@@ -28,10 +29,10 @@ const userSchema = new Schema({
     },
     Password: {
         type: String,
-        require: [ true, "Password is required!"],
-        minLength: 7,
-        max : [_maxStringLength, MaxStringLength("password", _maxStringLength)],
-        validate: {
+        require : true,
+        minLength : [7, MinStringLength("password", 7)],
+        maxLength : [_maxStringLength, MaxStringLength("password", _maxStringLength)],
+        validate : {
             validator: (password: string) => {
                 return ValidatePassword(password);
             }

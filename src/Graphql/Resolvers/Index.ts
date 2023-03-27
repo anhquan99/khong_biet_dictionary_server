@@ -9,14 +9,14 @@ const resolvers = {
         // ...Meanings.Query,
         // ...Pharses.Query,
         // ...SpeechTypes.Query,
-        // ...Users.Query,
+        ...Users.Query,
         ...Words.Query
     },
     Mutation:{
         // ...Meanings.Mutation,
         // ...Pharses.Mutation,
         // ...SpeechTypes.Mutation,
-        // ...Users.Mutation,
+        ...Users.Mutation,
         ...Words.Mutation
     }
 };

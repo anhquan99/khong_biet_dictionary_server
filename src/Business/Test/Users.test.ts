@@ -6,7 +6,7 @@ import { options } from "../../Utils/DbSetup";
 import UserModel from "../../Graphql/Schema/User";
 import {Login, Register} from '../Implement/User.Business';
 import validator from "validator";
-import UserDto from "../../Graphql/Dtos/UserDto";
+import UserDto from "../../Graphql/Dtos/User.Dto";
 
 const mockUser = {
     Username : "user_test",
@@ -14,15 +14,16 @@ const mockUser = {
     Email : "user@test.com",
     Role : roleEnumTs.user,
 };
-
 beforeAll(async() => {
     const testDbOptions = options;
-    testDbOptions.dbName = "khong_biet_dic_test";
+    testDbOptions.dbName = env.TEST_DATABASE;
     await mongoose.connect(env.MONGODB, testDbOptions);
 });
 
 afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
+    await mongoose.connection.db.dropDatabase({
+        dbName : env.TEST_DATABASE
+    });
     await mongoose.connection.close();
 });
 

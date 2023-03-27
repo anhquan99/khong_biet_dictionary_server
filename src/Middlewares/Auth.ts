@@ -1,7 +1,7 @@
 import {ExpressContextFunctionArgument} from '@apollo/server/express4';
 import jwt from 'jsonwebtoken';
 
-import UserDto from '../Graphql/Dtos/UserDto';
+import UserDto from '../Graphql/Dtos/User.Dto';
 import { TokenInfo } from './Token';
 import env from '../Utils/Config';
 

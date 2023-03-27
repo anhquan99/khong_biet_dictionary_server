@@ -7,7 +7,7 @@ interface UserDto
     Role? : string,
     Level? : number,
     Exp? : number,
-    CreatedAt? : string,
+    CreatedAt? : Date,
     Token? : string
 }
 export default UserDto

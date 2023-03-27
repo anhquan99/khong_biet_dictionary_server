@@ -13,8 +13,9 @@ const env = {
     PORT: process.env.PORT || 3000,
     MONGODB: process.env.MONGODB || `mongodb://${dbUser}:${dbPassword}@localhost:27017/?authMechanism=DEFAULT`,
     DATABASE: process.env.Database || "khong_biet_dic",
+    TEST_DATABASE : "khong_biet_dic_test",
     SECRET_KEY: process.env.SECRET_KEY || "private key",
-    ENABLE_INDEX_DB: enableIndexDb
+    ENABLE_INDEX_DB: enableIndexDb,
 };
 
 export default env;

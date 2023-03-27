@@ -13,7 +13,7 @@ const Words = {
         async createWord(_ : any, {newWord}:{newWord : string}){
             const word = new WordModel({
                 Characters: newWord,
-                CreatedAt: new Date().toISOString(),
+                CreatedAt: new Date(),
                 NumberOfSearch: 0,
                 IsDictionary: true
             });

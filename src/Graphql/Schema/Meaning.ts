@@ -23,7 +23,7 @@ const MeaningSchema = new Schema({
         require : false
     },
     CreatedAt : {
-        type : String,
+        type : Date,
         require : true
     },
     Status : StatusSchema,

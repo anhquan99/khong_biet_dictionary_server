@@ -59,7 +59,7 @@ const userSchema = new Schema({
         default : 0
     },
     CreatedAt: {
-        type: String,
+        type: Date,
         require: true
     },
     isDeleted:{

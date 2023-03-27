@@ -10,13 +10,17 @@ const SppechTypeSchema = new Schema({
         unique : true,
         max : [100, MaxStringLength('name', _maxStringLength)]
     },
+    Description : {
+        type : String,
+        required : false,
+    },
     Creator : {
         type : Schema.Types.ObjectId,
         require : true,
         ref : "User"
     },
     CreatedAt : {
-        type : String,
+        type : Date,
         required : true
     }
 });

@@ -6,7 +6,7 @@ const CommentSchema = {
         require : true
     },
     CreatedAt : {
-        type : String,
+        type : Date,
         require : true
     },
     Creator : {

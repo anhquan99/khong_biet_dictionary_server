@@ -7,7 +7,7 @@ const BookmarkSchema = new Schema ({
         ref : "User"
     },
     CreatedAt : {
-        type: String,
+        type: Date,
         require : true
     }
 });

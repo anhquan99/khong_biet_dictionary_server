@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import UserDto from "../Graphql/Dtos/UserDto";
+import UserDto from "../Graphql/Dtos/User.Dto";
 import env from "../Utils/Config";
 
 export interface AuthContext {

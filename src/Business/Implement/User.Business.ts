@@ -1,13 +1,14 @@
 import bcrypt from 'bcryptjs'
+import validator from 'validator';
 
-import UserDto from "../../Graphql/Dtos/UserDto";
+import UserDto from "../../Graphql/Dtos/User.Dto";
 import UserModel from "../../Graphql/Schema/User";
 import { FieldIsEmpty, UserNotFound } from "../../Enums/ErrorMessageEnum";
 import { GenerateToken } from '../../Middlewares/Token';
 import { roleEnumTs } from '../../Enums/SchemaEnum';
 
 export async function Register(username : string, email : string, password : string) : Promise<UserDto>{
-    if(password == undefined) throw new Error("Password is undefined!");
+    if(validator.isEmpty(password)) throw new Error("Password is empty!");
     var salt = await bcrypt.genSalt(Math.floor(Math.random() * 5));
     password = await bcrypt.hash(password, salt);
     const newUser = new UserModel({
@@ -17,7 +18,7 @@ export async function Register(username : string, email : string, password : str
         Role : roleEnumTs.user,
         Level : 0,
         Exp : 0,
-        CreatedAt : new Date().toISOString()
+        CreatedAt : new Date()
     });
     const newUserResult = await newUser.save();
     const user : UserDto = {

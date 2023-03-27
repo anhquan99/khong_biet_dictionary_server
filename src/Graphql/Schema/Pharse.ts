@@ -11,7 +11,7 @@ const PharseSchema = new Schema({
         ref : "User"
     },
     CreatedAt : {
-        type : String,
+        type : Date,
         require : true
     },
     Words : [String]

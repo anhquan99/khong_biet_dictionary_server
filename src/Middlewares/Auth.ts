@@ -12,6 +12,7 @@ export function Authen(context : ExpressContextFunctionArgument ) : TokenInfo{
     if(token)
     {
         const userInfo = jwt.verify(token, env.SECRET_KEY) as TokenInfo;
+        return userInfo;
     }
     throw new Error(LoginRequired)
 }

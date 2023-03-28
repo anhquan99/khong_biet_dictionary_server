@@ -8,6 +8,7 @@ const entity = "Speech type";
 
 export async function createSpeechType(name : string, description : string, creator : string) : Promise<SpeechTypeDto>
 {
+    console.log(creator);
     const newSpeechType = new SpeechTypeModel({
         Name : name,
         Description : description,
@@ -61,16 +62,24 @@ export async function findSpeechType(name : string)
 }
 export async function updateSpeechType(name : string, description : string, creator : string, createdAt : Date) : Promise<SpeechTypeDto>
 {
-    const querySpeechType = await SpeechTypeModel.findOneAndUpdate({Nam : name, Creator : new mongoose.Types.ObjectId(creator)});
+    const filter = {
+        Name : name,
+        Creator : new mongoose.Types.ObjectId(creator)
+    };
+    console.log(filter);
+    const update = {
+        Description : description,
+        CreatedAt : createdAt
+    };
+    const temp = await SpeechTypeModel.findOne({Name : name});
+    console.log(temp);
+    const querySpeechType = await SpeechTypeModel.findOneAndUpdate(filter, update);
     if(!querySpeechType) throw new Error(NoutFoundMessage(entity));
-    querySpeechType.Description = description;
-    querySpeechType.CreatedAt = createdAt
-    const result = await querySpeechType.updateOne();
     const dto : SpeechTypeDto = {
-        Name : result.Name,
-        Description : result.Description,
-        CreatedAt : result.CreatedAt,
-        Creator : result.Creator?._id.toString()
+        Name : querySpeechType.Name,
+        Description : querySpeechType.Description,
+        CreatedAt : querySpeechType.CreatedAt,
+        Creator : querySpeechType.Creator?._id.toString()
     };
     return dto;
 }

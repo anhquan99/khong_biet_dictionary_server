@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import * as Business from '../../../Business/Implement/SpeechTypes.Business';
 import { Authen } from "../../../Middlewares/Auth";
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
+import { TokenInfo } from "../../../Middlewares/Token";
 
 const SpeechTypes = {
     Query : {
@@ -18,12 +19,14 @@ const SpeechTypes = {
     Mutation : {
         async SpeechType(_ : any, {name, description} : {name : string, description? : string}, context : ExpressContextFunctionArgument)
         {
-            const user = Authen(context);
+            const user : TokenInfo = Authen(context);
+            console.log(user.Id);
             return await Business.createSpeechType(name, description as string, user.Id);
         },
         async UpdateSpeechType(_ : any, {name, description, createdAt} : {name : string, description : string, createdAt : Date}, context : ExpressContextFunctionArgument)
         {
             const user = Authen(context);
+            console.log(user.Id);
             return await Business.updateSpeechType(name, description, user.Id, createdAt);
         },
         async DeleteSpeechType(_ : any, {name} : {name : string}, context : ExpressContextFunctionArgument)

@@ -15,9 +15,9 @@ export function GenerateToken(user : UserDto) : string
 {
     return jwt.sign(
         {
-            id : user.Id,
-            username : user.Username,
-            role : user.Role    
+            Id : user.Id,
+            Username : user.Username,
+            Role : user.Role    
         },
         env.SECRET_KEY,
         {expiresIn : "1h"}

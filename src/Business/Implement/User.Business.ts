@@ -3,9 +3,11 @@ import validator from 'validator';
 
 import UserDto from "../../Graphql/Dtos/User.Dto";
 import UserModel from "../../Graphql/Schema/User";
-import { FieldIsEmpty, UserNotFound } from "../../Enums/ErrorMessageEnum";
+import { FieldIsEmpty, NoutFoundMessage } from "../../Enums/ErrorMessageEnum";
 import { GenerateToken } from '../../Middlewares/Token';
 import { roleEnumTs } from '../../Enums/SchemaEnum';
+
+const entity = "User";
 
 export async function Register(username : string, email : string, password : string) : Promise<UserDto>{
     if(validator.isEmpty(password)) throw new Error("Password is empty!");
@@ -36,11 +38,11 @@ export async function Register(username : string, email : string, password : str
 export async function Login(username : string, password : string) : Promise<UserDto>{
     const existedUser = await UserModel.findOne({ Username : username});
     if(existedUser === undefined || existedUser === null){
-        throw new Error(UserNotFound);
+        throw new Error(NoutFoundMessage(entity));
     }
     const isPasswordMatch = await bcrypt.compare(password, existedUser.Password as string);
     if(!isPasswordMatch){
-        throw new Error(UserNotFound);
+        throw new Error(NoutFoundMessage(entity));
     }
     const user : UserDto = {
         Id : existedUser._id.toString(),

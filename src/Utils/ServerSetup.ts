@@ -23,7 +23,8 @@ async function startServer() : Promise<void>
             resolvers,
             csrfPrevention: true,
             cache: "bounded",
-            plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
+            plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
+            // introspection : env.NODE_ENV !== 'prod'
         });
 
         await server.start();

@@ -10,14 +10,14 @@ import { roleEnum, _maxStringLength, _minStringLength } from '../../Enums/Schema
 const userSchema = new Schema({
     Username: {
         type: String,
-        require: true,
+        required: true,
         minLength : [_minStringLength, MinStringLength("username", _minStringLength)],
         maxLength : [_maxStringLength, MaxStringLength("username", _maxStringLength)],
         unique: true,
     },
     Email:{
         type: String,
-        require: true,
+        required: true,
         maxLength: [_maxStringLength, MaxStringLength("email", _maxStringLength)],
         unique: true,
         validate:{
@@ -26,10 +26,10 @@ const userSchema = new Schema({
             },
             message: InvalidField("email address")
         }
-    },
+    },  
     Password: {
         type: String,
-        require : true,
+        required : true,
         minLength : [7, MinStringLength("password", 7)],
         maxLength : [_maxStringLength, MaxStringLength("password", _maxStringLength)],
         validate : {
@@ -44,27 +44,27 @@ const userSchema = new Schema({
             values: roleEnum,
             message: "{VALUE} not supported!"
         },
-        require: true
+        required: true
     },
     Level: {
         type: Number,
-        require: false,
+        required: false,
         min : 0,
         default : 0
     },
     Exp: {
         type: Number,
-        require: false,
+        required: false,
         min : 0,
         default : 0
     },
     CreatedAt: {
         type: Date,
-        require: true
+        required: true
     },
     isDeleted:{
         type: Boolean,
-        require: true,
+        required: true,
     }
 });
 

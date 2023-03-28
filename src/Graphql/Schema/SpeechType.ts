@@ -6,17 +6,17 @@ const _maxStringLength = 100
 const SppechTypeSchema = new Schema({
     Name : {
         type : String,
-        require : true,
+        required : true,
         unique : true,
-        max : [100, MaxStringLength('name', _maxStringLength)]
+        maxLength : [_maxStringLength, MaxStringLength('name', _maxStringLength)]
     },
     Description : {
         type : String,
-        required : false,
+        required : false
     },
     Creator : {
         type : Schema.Types.ObjectId,
-        require : true,
+        required : true,
         ref : "User"
     },
     CreatedAt : {

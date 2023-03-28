@@ -3,7 +3,7 @@ import validator from 'validator';
 
 import UserDto from "../../Graphql/Dtos/User.Dto";
 import UserModel from "../../Graphql/Schema/User";
-import { FieldIsEmpty, UserNotFound } from "../../Enums/ErrorMessageEnum";
+import { FieldIsEmpty } from "../../Enums/ErrorMessageEnum";
 import { GenerateToken } from '../../Middlewares/Token';
 import { roleEnumTs } from '../../Enums/SchemaEnum';
 

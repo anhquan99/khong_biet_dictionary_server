@@ -1,34 +1,37 @@
 import SpeechTypeModel from "../../Schema/SpeechType";
 import mongoose from "mongoose";
-
-async function findSpeechType(speechTypeName : string){
-    const result = await SpeechTypeModel.find({
-        Name : name
-    });
-    return result;
-}
-// async function createSpeechType(speechTypeName : string, creatorId : string){
-//     const newSpeechType = new SpeechTypeModel({
-//         Name : speechTypeName,
-//         // Creator : mongoose.Schema.Types.ObjectId(creatorId),
-//         CreatedAt : new Date().toISOString()
-//     });
-//     await newSpeechType.save();
-//     return newSpeechType;
-// }
+import * as Business from '../../../Business/Implement/SpeechTypes.Business';
+import { Authen } from "../../../Middlewares/Auth";
+import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 
 const SpeechTypes = {
     Query : {
-        async findSpeechType(_ : any, {speechTypeName} : {speechTypeName : string}){
-            const result = await findSpeechType(speechTypeName);
-            return result;
+        async SpeechType(_ : any, {speechTypeName} : {speechTypeName : string}){
+            return await Business.findSpeechType(speechTypeName);
+        },
+        async SpeechTypes(_ : any, {speechTypeName, description, creator, createdFrom, createdTo} : 
+                        {speechTypeName? : string, description? : string, creator? : string, createdFrom? : Date, createdTo? : Date})
+        {  
+            return await Business.findSpeechTypes(speechTypeName, description, creator, createdFrom, createdTo);
         }
     },
     Mutation : {
-    //     async createSpeechType(_ : any, {speechTypeName} : {speechTypeName : string}){
-    //         const result = await createSpeechType(speechTypeName, "001");
-    //         return result;
-    //     }
+        async SpeechType(_ : any, {name, description} : {name : string, description? : string}, context : ExpressContextFunctionArgument)
+        {
+            const user = Authen(context);
+            return await Business.createSpeechType(name, description as string, user.Id);
+        },
+        async UpdateSpeechType(_ : any, {name, description, createdAt} : {name : string, description : string, createdAt : Date}, context : ExpressContextFunctionArgument)
+        {
+            const user = Authen(context);
+            return await Business.updateSpeechType(name, description, user.Id, createdAt);
+        },
+        async DeleteSpeechType(_ : any, {name} : {name : string}, context : ExpressContextFunctionArgument)
+        {
+            const user = Authen(context);
+            return await Business.deleteSpeechType(name, user.Id);
+            return "Success!";
+        }
     }
 }
 

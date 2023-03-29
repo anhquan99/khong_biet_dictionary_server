@@ -1,5 +1,4 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import mongoose from "mongoose";
 import { roleEnumTs } from "../../Enums/SchemaEnum";
 import env from "../../Utils/Config";
 import { options } from "../../Utils/DbSetup";
@@ -16,12 +15,12 @@ const mockUser = {
 };
 
 describe("User mutation", () => {
-    test("User registrt happy case", async () => {
-        const createdUser = await Register(mockUser.Username, mockUser.Email, mockUser.Password);
-        expect(createdUser.Username as string).toBe(mockUser.Username);
-        expect(createdUser.Email as string).toBe(mockUser.Email);
-        expect(createdUser.Password as string).not.toBe(mockUser.Password);
-        expect(validator.isEmpty(createdUser.Id as string)).toBeFalsy();
+    test("User register happy case", async () => {
+        const newUser = await Register(mockUser.Username, mockUser.Email, mockUser.Password);
+        expect(newUser.Username as string).toBe(mockUser.Username);
+        expect(newUser.Email as string).toBe(mockUser.Email);
+        expect(newUser.Password as string).not.toBe(mockUser.Password);
+        expect(validator.isEmpty(newUser.Id as string)).toBeFalsy();
     })
 })
 

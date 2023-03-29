@@ -10,7 +10,7 @@ const typeDefs = `#graphql
     findWord(keyword: String): [String],
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
-    SpeechTypes(speechTypeName : String, desciprtion : String, creator : String, createdFrom : Date, createdTo : Date) : SpeechType
+    SpeechTypes(speechTypeName : String, desciprtion : String, creator : String, createdFrom : Date, createdTo : Date) : [SpeechType]
   }
   type Mutation {
     createWord(newWord: String): String,

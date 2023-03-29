@@ -8,12 +8,11 @@ const entity = "Speech type";
 
 export async function createSpeechType(name : string, description : string, creator : string) : Promise<SpeechTypeDto>
 {
-    console.log(creator);
     const newSpeechType = new SpeechTypeModel({
         Name : name,
         Description : description,
         CreatedAt : new Date(),
-        Creator : new mongoose.Types.ObjectId(creator)
+        Creator : (creator)
     });
     const result = await newSpeechType.save();
     const dto : SpeechTypeDto = {
@@ -26,15 +25,26 @@ export async function createSpeechType(name : string, description : string, crea
 }
 export async function findSpeechTypes(name? : string, description? : string, creator? : string, createdFrom? : Date, createdTo? : Date) : Promise<SpeechTypeDto[]> 
 {
+    const filter = {} as any;
+    if(name !== undefined) filter.Name = {$regex : new RegExp(name as string, 'i')};
+    if(description !== undefined) filter.Description = {$regex : new RegExp(description as string, 'i')}
+    if(creator !== undefined) filter.Creator = new mongoose.Types.ObjectId(creator); 
+    if(createdFrom !== undefined){
+        filter.CreatedAt = {
+            $gte : createdFrom
+        };
+        if(createdTo !== undefined) {
+            filter.CreatedAt.$lte = createdTo;
+        }
+    }
+    else if(createdTo !== undefined){
+        filter.CreatedAt = {
+            $lte : createdTo
+        };
+    }
     const querySpeechTypeResult = await SpeechTypeModel.find({$or : 
         [
-            {Name : {$regex : new RegExp(name as string, 'i')}}, 
-            {Description : {$regex : new RegExp(description as string, 'i')}}, 
-            {Creator : new mongoose.Types.ObjectId(creator)}, 
-            {CreatedAt : {
-                $gte : createdFrom,
-                $lte : createdTo
-            }}
+            filter
         ]});
     var result : SpeechTypeDto[] = [];
     querySpeechTypeResult.forEach( x => {

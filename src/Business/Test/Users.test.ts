@@ -14,18 +14,6 @@ const mockUser = {
     Email : "user@test.com",
     Role : roleEnumTs.user,
 };
-beforeAll(async() => {
-    const testDbOptions = options;
-    testDbOptions.dbName = env.TEST_DATABASE;
-    await mongoose.connect(env.MONGODB, testDbOptions);
-});
-
-afterAll(async () => {
-    await mongoose.connection.db.dropDatabase({
-        dbName : env.TEST_DATABASE
-    });
-    await mongoose.connection.close();
-});
 
 describe("User mutation", () => {
     test("User registrt happy case", async () => {

@@ -8,4 +8,6 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
   setupFilesAfterEnv: ["<rootDir>/src/Utils/SetupJest.ts"],
+  globalTeardown: "<rootDir>/src/Utils/GlobalTeardownJest.ts",
+  // setupFiles: ["<rootDir>/src/Utils/SetupJest.ts"],
 };

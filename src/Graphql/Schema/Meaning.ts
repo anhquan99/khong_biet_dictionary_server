@@ -1,4 +1,5 @@
 import {model, Schema} from "mongoose";
+import BookmarkSchema from "./Attribute/Bookmark";
 import CommentSchema from "./Attribute/Comment";
 import StatusSchema from "./Attribute/Status";
 import VoteSchema from "./Attribute/Vote";
@@ -33,6 +34,7 @@ const MeaningSchema = new Schema({
     },
     Votes : [VoteSchema],
     Comments : [CommentSchema],
+    Bookmarks : [BookmarkSchema],
     SpeechType : {
         type : Schema.Types.ObjectId,
         ref : "SpeechType",

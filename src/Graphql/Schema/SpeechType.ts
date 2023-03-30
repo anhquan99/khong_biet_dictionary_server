@@ -1,5 +1,7 @@
 import {model, Schema} from "mongoose";
-import { MaxStringLength } from "../../Enums/ErrorMessageEnum";
+import validator from "validator";
+
+import { InvalidField, MaxStringLength } from "../../Enums/ErrorMessageEnum";
 
 const _maxStringLength = 100
 
@@ -8,11 +10,23 @@ const SppechTypeSchema = new Schema({
         type : String,
         required : true,
         unique : true,
-        maxLength : [_maxStringLength, MaxStringLength('name', _maxStringLength)]
+        maxLength : [_maxStringLength, MaxStringLength('name', _maxStringLength)],
+        validate : {
+            validator : (Name : string) => {
+                return validator.isAscii(Name);
+            },
+            message : InvalidField("name")
+        }
     },
     Description : {
         type : String,
-        required : false
+        required : false,
+        validate : {
+            validator : (Description : string) => {
+                return validator.isAscii(Description);
+            },
+            message : InvalidField("description")
+        }
     },
     Creator : {
         type : Schema.Types.ObjectId,

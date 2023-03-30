@@ -1,25 +1,35 @@
-import WordModel from "../../Schema/Word";
 import mongoose from "mongoose";    
+import * as Business from "../../../Business/Implement/Words.Bussiness";
+import { convertWordToDto } from "../../Dtos/Word.Dto";
+import { TokenInfo } from "../../../Middlewares/Token";
+import { Authen } from "../../../Middlewares/Auth";
+import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 
 const Words = {
     Query:{
-        async findWord(_ : any, {keyword}: {keyword: string}){
-            const result = await WordModel.find({Characters: keyword});
-            var resultArr = result.map(x => x.Characters);
-            return resultArr;
-        }
+        async Word(_ : any, {wordId} : {wordId : string}){
+            return await Business.findWord(wordId);
+        },
+        async Words(_ : any, {characters, creator, speechTypeId, createdFrom, createdTo, numberOfSearchFrom, numberOfSearchTo} :
+                    {characters? : string, creator? : string, speechTypeId? : string, createdFrom? : Date, createdTo? : Date, numberOfSearchFrom? : number, numberOfSearchTo? : number}){
+            return await Business.findWords(characters, creator, speechTypeId, createdFrom, createdTo, numberOfSearchFrom, numberOfSearchTo);
+        },
     },
     Mutation:{
-        async createWord(_ : any, {newWord}:{newWord : string}){
-            const word = new WordModel({
-                Characters: newWord,
-                CreatedAt: new Date(),
-                NumberOfSearch: 0,
-                IsDictionary: true
-            });
-            const result = await word.save();
-            return result.Characters;
-        }
+        async Word(_ : any, {characters, speechTypeId} : {characters : string, speechTypeId : string}, context : ExpressContextFunctionArgument){
+            const user : TokenInfo = Authen(context);
+            return await Business.createWord(characters, speechTypeId, user.Id, user.Role);
+        },
+        async UpdateWord(_ : any, {wordId, characters, createdAt, numberOfSearch, isDictionary, speechType} 
+            : {wordId : string, characters? : string, createdAt? : Date, numberOfSearch? : number, isDictionary? : boolean, speechType? : string}, context : ExpressContextFunctionArgument){
+            const user : TokenInfo = Authen(context);
+            return await Business.updateWord(wordId, user.Id, characters, createdAt, numberOfSearch, isDictionary, speechType);
+        },
+        async DeleteWord(_ : any, {wordId} : {wordId : string}, context : ExpressContextFunctionArgument){
+            const user : TokenInfo = Authen(context);
+            await Business.deleteWord(wordId, user.Id);
+            return "Success!";
+        }, 
     }
 };
 

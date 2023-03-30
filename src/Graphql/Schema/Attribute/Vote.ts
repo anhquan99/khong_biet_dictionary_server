@@ -7,7 +7,7 @@ const VoteSchema = new Schema({
       ref : "User"
     },
     CreatedAt: {
-      type: String,
+      type: Date,
       require : true
     },
     IsUpVote: {

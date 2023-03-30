@@ -10,7 +10,7 @@ export function MinStringLength(fieldName : string, minLength : number) : string
 export function InvalidField(fieldName : string){
     return `Invalid ${fieldName}`;
 }
-export function NoutFoundMessage(entity : string) : string
+export function NotFoundMessage(entity : string) : string
 {
     return `${entity} not found!`;
 }

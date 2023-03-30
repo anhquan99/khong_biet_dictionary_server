@@ -20,14 +20,12 @@ const SpeechTypes = {
         async SpeechType(_ : any, {name, description} : {name : string, description? : string}, context : ExpressContextFunctionArgument)
         {
             const user : TokenInfo = Authen(context);
-            console.log(user.Id);
             return await Business.createSpeechType(name, description as string, user.Id);
         },
-        async UpdateSpeechType(_ : any, {name, description, createdAt} : {name : string, description : string, createdAt : Date}, context : ExpressContextFunctionArgument)
+        async UpdateSpeechType(_ : any, {speechTypeId, name, description, createdAt} : {speechTypeId : string, name? : string, description : string, createdAt : Date}, context : ExpressContextFunctionArgument)
         {
             const user = Authen(context);
-            console.log(user.Id);
-            return await Business.updateSpeechType(name, description, user.Id, createdAt);
+            return await Business.updateSpeechType(speechTypeId, user.Id, name, description, createdAt);
         },
         async DeleteSpeechType(_ : any, {name} : {name : string}, context : ExpressContextFunctionArgument)
         {

@@ -1,7 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { roleEnumTs } from "../../Enums/SchemaEnum";
-import env from "../../Utils/Config";
-import { options } from "../../Utils/DbSetup";
 import UserModel from "../../Graphql/Schema/User";
 import {Login, Register} from '../Implement/User.Business';
 import validator from "validator";

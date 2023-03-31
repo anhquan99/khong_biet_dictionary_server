@@ -31,14 +31,14 @@ export async function createWord(characters : string, speechTypeId : string, cre
     return wordDto;
 }
 export async function findWord(wordId : string){
-    const result = WordModel.findOne({_id : new mongoose.Types.ObjectId(wordId)});
+    const result = await WordModel.findOneAndUpdate({_id : new mongoose.Types.ObjectId(wordId)}, {$inc : {NumberOfSearch : 1} }, {new : true});
     return convertWordToDto(result);
 }
 
 export async function findWords(characters? : string, creator? : string, speechTypeId? : string, createdFrom? : Date, createdTo? : Date, numberOfSearchFrom? : number, numberOfSearchTo? : number)
 {
     const filter = {} as any;
-    if(characters !== undefined) filter.Characters = characters;
+    if(characters !== undefined) filter.Characters = {$regex : new RegExp(characters as string, 'i')};
     if(creator !== undefined) filter.Creator = new mongoose.Types.ObjectId(creator);
     if(speechTypeId !== undefined) filter.SpeechType = new mongoose.Types.ObjectId(speechTypeId);
     if(createdFrom !== undefined){

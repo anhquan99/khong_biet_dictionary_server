@@ -18,7 +18,6 @@ const typeDefs = `#graphql
     Votes : [String]
   }
   type Query {
-    findWord(keyword: String): [String],
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
     SpeechTypes(speechTypeName : String, desciprtion : String, creator : String, createdFrom : Date, createdTo : Date) : [SpeechType]
@@ -26,7 +25,6 @@ const typeDefs = `#graphql
     Words(characters : String, creator : String, speechTypeId : String, createdFrom : Date, createdTo : Date, numberOfSearchFrom : Int, numberOfSearchTo : Int) : [Word]
   }
   type Mutation {
-    createWord(newWord: String): String,
     Register(username : String, password : String, email : String) : String
     SpeechType(name : String!, description : String) : SpeechType
     UpdateSpeechType(name : String!, description : String, createdAt : Date!) : SpeechType,

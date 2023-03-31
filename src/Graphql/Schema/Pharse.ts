@@ -1,9 +1,20 @@
-import { model, Schema } from "mongoose";  
+import mongoose, { model, Schema } from "mongoose";  
+import validator from "validator";
+
+import { InvalidField } from "../../Enums/ErrorMessageEnum";
+
+const entity = "pharse";
 
 const PharseSchema = new Schema({
     Pharse : {
         type : String,
-        require : true
+        require : true,
+        validate : {
+            validator : (pharse : string) => {
+                return validator.isAscii(pharse);
+            },
+            message : InvalidField(entity)
+        }
     },
     Creator : {
         type : Schema.Types.ObjectId,
@@ -14,7 +25,11 @@ const PharseSchema = new Schema({
         type : Date,
         require : true
     },
-    Words : [String]
+    Words : [{
+        type : mongoose.Types.ObjectId,
+        require : true,
+        ref : "Word"
+    }]
 });
 
 const PharseModel = model("Pharse", PharseSchema);

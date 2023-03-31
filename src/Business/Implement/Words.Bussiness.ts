@@ -79,7 +79,7 @@ export async function updateWord(wordId : string, creator : string, characters? 
 {
     const filter = {
         _id : new mongoose.Types.ObjectId(wordId),
-        creator : new mongoose.Types.ObjectId(creator)
+        Creator : new mongoose.Types.ObjectId(creator)
     };
     var update = {} as any;
     if(characters !== undefined) update.Characters = characters;

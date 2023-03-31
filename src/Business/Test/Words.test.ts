@@ -105,5 +105,4 @@ describe("Word test", () => {
         const word = await WordBusiness.createWord("White", mockSpeechType.id, mockAdmin.id, mockAdmin.role);
         expect(word.IsDictionary).toBeTruthy();
     })
-    
 })

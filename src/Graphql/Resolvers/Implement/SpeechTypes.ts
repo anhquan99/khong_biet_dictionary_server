@@ -1,5 +1,5 @@
-import SpeechTypeModel from "../../Schema/SpeechType";
 import mongoose from "mongoose";
+
 import * as Business from '../../../Business/Implement/SpeechTypes.Business';
 import { Authen } from "../../../Middlewares/Auth";
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
@@ -30,7 +30,7 @@ const SpeechTypes = {
         async DeleteSpeechType(_ : any, {name} : {name : string}, context : ExpressContextFunctionArgument)
         {
             const user = Authen(context);
-            return await Business.deleteSpeechType(name, user.Id);
+            await Business.deleteSpeechType(name, user.Id);
             return "Success!";
         }
     }

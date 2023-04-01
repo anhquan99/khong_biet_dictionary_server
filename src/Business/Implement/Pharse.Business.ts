@@ -17,13 +17,13 @@ export async function createPharse(pharse : string, creator : string, words : [s
    return convertPharseToDto(result);
 }
 export async function findPharse(pharseId : string){
-    const result = await PharseModel.find({_id : new mongoose.Types.ObjectId(pharseId)});
+    const result = await PharseModel.findOne({_id : new mongoose.Types.ObjectId(pharseId)});
     return convertPharseToDto(result);
 }
 export async function findPharses(pharse? : string, creator? : string, createdFrom? : Date, createdTo? : Date, words? : [string]) {
     var filter = {} as any;
     setRegexIfNotUndefine(filter, "Pharse", pharse)
-    setValueIfNotUndefine(filter, "Creator", new mongoose.Types.ObjectId(creator));
+    setIdIfNotUndefine(filter, "Creator", creator);
     setArrObjectIdIfNotUndefine(filter, "Words", words);
     setDateFilter(filter, createdFrom, createdTo);
     const queryPharsese = await PharseModel.find({$or :[filter]});

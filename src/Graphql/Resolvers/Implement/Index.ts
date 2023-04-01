@@ -7,14 +7,14 @@ import Words from "./Words";
 const resolvers = {
     Query:{
         // ...Meanings.Query,
-        // ...Pharses.Query,
+        ...Pharses.Query,
         ...SpeechTypes.Query,
         ...Users.Query,
         ...Words.Query
     },
     Mutation:{
         // ...Meanings.Mutation,
-        // ...Pharses.Mutation,
+        ...Pharses.Mutation,
         ...SpeechTypes.Mutation,
         ...Users.Mutation,
         ...Words.Mutation

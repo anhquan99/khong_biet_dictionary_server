@@ -4,7 +4,7 @@ import SpeechTypeModel from "../../Graphql/Schema/SpeechType";
 import WordModel from "../../Graphql/Schema/Word";
 
 import { createSpeechType, deleteSpeechType, findSpeechType, findSpeechTypes, updateSpeechType } from "../Implement/SpeechTypes.Business";
-import { Login, Register } from "../Implement/User.Business";
+import { Login, Register } from "../Implement/Users.Business";
 
 const mockST = {
     name : "Noun",

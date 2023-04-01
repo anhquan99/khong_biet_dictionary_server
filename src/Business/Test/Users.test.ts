@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { roleEnumTs } from "../../Enums/SchemaEnum";
 import UserModel from "../../Graphql/Schema/User";
-import {Login, Register} from '../Implement/User.Business';
+import {Login, Register} from '../Implement/Users.Business';
 import validator from "validator";
 import UserDto from "../../Graphql/Dtos/User.Dto";
 

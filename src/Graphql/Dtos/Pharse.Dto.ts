@@ -11,6 +11,7 @@ export interface PharseDto{
 export function convertPharseToDto(pharse : any) : PharseDto{
     return {
         Id : pharse._id.toString(),
+        Pharse : pharse.Pharse,
         Creator : pharse.Creator._id.toString(),
         CreatedAt : pharse.CreatedAt,
         Words : pharse.Words.map((item : mongoose.Types.ObjectId) => item._id.toString())

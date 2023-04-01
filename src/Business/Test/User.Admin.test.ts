@@ -2,7 +2,7 @@ import { describe, expect, jest, test } from "@jest/globals";
 import validator from "validator";
 
 import { roleEnumTs } from "../../Enums/SchemaEnum";
-import { RegisterAdmin } from "../Implement/User.Admin.Business";
+import { RegisterAdmin } from "../Implement/Users.Admin.Business";
 
 const mockAdmin = {
     Username : "admin",

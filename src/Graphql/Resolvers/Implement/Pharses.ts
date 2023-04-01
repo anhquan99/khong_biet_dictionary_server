@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import * as Business from '../../../Business/Implement/Pharse.Business'
+import * as Business from '../../../Business/Implement/Pharses.Business'
 import { Authen } from "../../../Middlewares/Auth";
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 import { TokenInfo } from "../../../Middlewares/Token";

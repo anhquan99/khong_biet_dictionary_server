@@ -1,6 +1,6 @@
 import UserDto from "../../Dtos/User.Dto";
 import UserModel from "../../Schema/User";
-import {Login, Register} from '../../../Business/Implement/User.Business';
+import {Login, Register} from '../../../Business/Implement/Users.Business';
 import { GenerateToken } from "../../../Middlewares/Token";
 const Users = {
     Query : {

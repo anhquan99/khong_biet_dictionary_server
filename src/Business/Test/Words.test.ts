@@ -1,12 +1,11 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import Words from "../../Graphql/Resolvers/Implement/Words";
-import { Register } from "../Implement/User.Business";
+import { Register } from "../Implement/Users.Business";
 
 import * as WordBusiness from '../Implement/Words.Bussiness'
-import * as UserBusiness from '../Implement/User.Business' 
+import * as UserBusiness from '../Implement/Users.Business' 
 import * as SpeechTypeBusiness from '../Implement/SpeechTypes.Business'
 import WordModel from "../../Graphql/Schema/Word";
-import * as AdminBusiness from '../Implement/User.Admin.Business'
+import * as AdminBusiness from '../Implement/Users.Admin.Business'
 import { roleEnumTs } from "../../Enums/SchemaEnum";
 
 const mockCreator = {
@@ -29,7 +28,7 @@ const mockWord = {
 }
 const mockSpeechType = {
     id : "0",
-    name : "Adjective",
+    name : "Speech Type mock",
     description : "An adjective is a word that describes a noun or noun phrase. Its semantic role is to change information given by the noun"
 }
 const mockCreatedWords = [

@@ -27,3 +27,8 @@ export function setArrObjectIdIfNotUndefine(obj : any, field : string, value? : 
 export function setIdIfNotUndefine(obj : any, field : string, value? : string){
     if(value !== undefined) return new mongoose.Types.ObjectId(value);
 }
+// export function setValueArrayIfNotUndefine(obj : any, field : string, value : any){
+//     if(value !== undefined) return obj[field] = {
+
+//     }
+// }

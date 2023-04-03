@@ -18,20 +18,11 @@ export async function createWord(characters : string, speechTypeId : string, cre
         Votes : []
     });
     const result = await newWord.save();
-    const wordDto : WordDto = {
-        Id : result._id.toString(),
-        Characters : result.Characters,
-        CreatedAt : result.CreatedAt,
-        NumberOfSearch : result.NumberOfSearch,
-        IsDictionary : result.IsDictionary,
-        Creator : result.Creator?._id.toString(),
-        SpeechType : result._id.toString(),
-        Votes : result.Votes as [string]
-    };
+    const wordDto : WordDto = convertWordToDto(result);
     return wordDto;
 }
 export async function findWord(wordId : string){
-    const result = await WordModel.findOneAndUpdate({_id : new mongoose.Types.ObjectId(wordId)}, {$inc : {NumberOfSearch : 1} }, {new : true});
+    const result = await WordModel.findOne({_id : new mongoose.Types.ObjectId(wordId)}, {$inc : {NumberOfSearch : 1} }, {new : true});
     return convertWordToDto(result);
 }
 

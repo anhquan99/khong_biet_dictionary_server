@@ -1,5 +1,4 @@
 import {SpeechTypeDto} from "./SpeechType.Dto";
-import WordModel from "../Schema/Word";
 
 export interface WordDto{
     Id? : string,

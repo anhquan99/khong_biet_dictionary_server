@@ -24,6 +24,16 @@ const typeDefs = `#graphql
     CreatedAt : Date,
     Words : [String]
   }
+  type Meaning{
+    Id : String,
+    Meaning : String,
+    Creator : String,
+    Word : String,
+    Example : [String]
+    CreatedAt : Date
+    Status : String,
+    IsSlang : Boolean
+  }
   type Query {
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
@@ -32,6 +42,8 @@ const typeDefs = `#graphql
     Words(characters : String, creator : String, speechTypeId : String, createdFrom : Date, createdTo : Date, numberOfSearchFrom : Int, numberOfSearchTo : Int) : [Word]
     Pharse(pharseId : String) : Pharse
     Pharses(pharse : String, creator : String, createdFrom : Date, createdTo : Date, words : [String]) : [Pharse]
+    Meaning(meaningId : String!) : Meaning
+    Meanings(meaning : String, creator : String, words : String, createdFrom : Date, createdTo : Date, status : String, isSlang : Boolean, speechType : String) : [Meaning]
   }
   type Mutation {
     Register(username : String, password : String, email : String) : String
@@ -44,6 +56,9 @@ const typeDefs = `#graphql
     Pharse(pharse : String, words : [String]) : Pharse
     UpdatePharse(pharseId : String!, pharse : String, createdAt : Date, words : [String]) : Pharse
     DeletePharse(pharseId : String!) : String!
+    Meaning(meaning : String, word : String, isSlang : Boolean, speechType : String, example : [String]) : Meaning
+    UpdateMeaning(meaningId : String!, meaning : String, example : [String], createdAt : Date, status : String, isSlang : Boolean) : Meaning
+    DeleteMeaning(meaningId : String!) : String
   }
 `;
 export default typeDefs;

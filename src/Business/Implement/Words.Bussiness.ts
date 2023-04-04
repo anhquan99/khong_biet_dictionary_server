@@ -22,7 +22,7 @@ export async function createWord(characters : string, speechTypeId : string, cre
     return wordDto;
 }
 export async function findWord(wordId : string){
-    const result = await WordModel.findOne({_id : new mongoose.Types.ObjectId(wordId)}, {$inc : {NumberOfSearch : 1} }, {new : true});
+    const result = await WordModel.findOneAndUpdate({_id : new mongoose.Types.ObjectId(wordId)}, {$inc : {NumberOfSearch : 1} }, {new : true});
     return convertWordToDto(result);
 }
 

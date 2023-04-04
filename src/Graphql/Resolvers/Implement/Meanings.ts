@@ -16,11 +16,11 @@ const Meanings ={
         }
     },
     Mutation : {
-        async Meaing(_ : any, {meaing, word, isSlang, speechType, example} : 
-            {meaing : string, word: string, isSlang : boolean, speechType : string, example? : [string]}, context : ExpressContextFunctionArgument)
+        async Meaning(_ : any, {meaning, word, isSlang, speechType, example} : 
+            {meaning : string, word: string, isSlang : boolean, speechType : string, example? : [string]}, context : ExpressContextFunctionArgument)
         {
             const user : TokenInfo = Authen(context);
-            return await Business.createMeaning(meaing, word, isSlang, speechType, user.Id, user.Role, example);
+            return await Business.createMeaning(meaning, word, isSlang, speechType, user.Id, user.Role, example);
         }, 
         async UpdateMeaning(_ : any, {meaningId, meaning, example, createdAt, status, isSlang} : 
             {meaningId : string, meaning? : string, 
@@ -29,9 +29,9 @@ const Meanings ={
             const user : TokenInfo = Authen(context);
             return await Business.updateMeaning(meaningId, user.Id, meaning, example, createdAt, status, isSlang);
         },
-        async DeleteMeaing(_ : any, {meaingId} : {meaingId : string}, context : ExpressContextFunctionArgument){
+        async DeleteMeaning(_ : any, {meaningId} : {meaningId : string}, context : ExpressContextFunctionArgument){
             const user : TokenInfo = Authen(context);
-            await Business.deleteMeaning(meaingId, user.Id);
+            await Business.deleteMeaning(meaningId, user.Id);
             return "Success!";
         }
     }

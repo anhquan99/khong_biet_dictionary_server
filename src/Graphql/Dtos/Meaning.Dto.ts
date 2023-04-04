@@ -28,13 +28,13 @@ export function convertMeaningToDto(meaning : any) : MeaningDto{
         CreatedAt : meaning.CreatedAt,
         Status : meaning.Status,
         IsSlang : meaning.IsSlang,
-        Votes : meaning.Vote.forEach( (x : any) => {
+        Votes : meaning.Votes.forEach( (x : any) => {
             convertVoteToDto(x);
         }),
-        Comments : meaning.Comment.forEach( (x : any) => {
+        Comments : meaning.Comments.forEach( (x : any) => {
             convertCommentToDto(x);
         }),
-        Bookmarks : meaning.Bookmark.forEach((x : any) => {
+        Bookmarks : meaning.Bookmarks.forEach((x : any) => {
             convertBookmarkToDto(x);
         }),
         SpeechType : meaning.SpeechType._id.toString()

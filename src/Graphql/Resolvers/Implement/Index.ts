@@ -6,14 +6,14 @@ import Words from "./Words";
 
 const resolvers = {
     Query:{
-        // ...Meanings.Query,
+        ...Meanings.Query,
         ...Pharses.Query,
         ...SpeechTypes.Query,
         ...Users.Query,
         ...Words.Query
     },
     Mutation:{
-        // ...Meanings.Mutation,
+        ...Meanings.Mutation,
         ...Pharses.Mutation,
         ...SpeechTypes.Mutation,
         ...Users.Mutation,

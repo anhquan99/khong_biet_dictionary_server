@@ -4,7 +4,7 @@ import { TokenInfo } from "../../Middlewares/Token";
 import mongoose from "mongoose";
 import { roleEnumTs, statusEnumTs } from "../../Enums/SchemaEnum";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
-import { setDateFilter, setIdIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
+import { setDateFilter, setIdIfNotUndefine, setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
 
 const entity = "Meaning";
 
@@ -22,7 +22,7 @@ export async function createMeaning(meaning : string, word : string, isSlang : b
     return convertMeaningToDto(result);
 }
 export async function findMeaning(meaningId : string){
-    const result = MeaningModel.findOne({_id : new mongoose.Types.ObjectId(meaningId)});
+    const result = await MeaningModel.findOne({_id : new mongoose.Types.ObjectId(meaningId)});
     return convertMeaningToDto(result);
 }
 export async function findMeanings(meaning? : string, creator? : string, word? : string,  
@@ -33,7 +33,7 @@ export async function findMeanings(meaning? : string, creator? : string, word? :
     speechType? : string)
 {
     const filter = {} as any;
-    setValueIfNotUndefine(filter, "Meaning", meaning);
+    setRegexIfNotUndefine(filter, "Meaning", meaning);
     setIdIfNotUndefine(filter, "Creator", creator);
     setIdIfNotUndefine(filter, "Word", word);
     setDateFilter(filter, createdFrom, createdTo);

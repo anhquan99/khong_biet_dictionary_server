@@ -3,16 +3,22 @@ import { SpeechTypeDto,  convertSpeechTypeToDto } from "../../Graphql/Dtos/Speec
 import mongoose, { mongo } from "mongoose";
 import WordModel from "../../Graphql/Schema/Word";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
+import { roleEnumTs, setStatusBaseOnRole, statusEnumTs } from "../../Enums/SchemaEnum";
+import { setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
+import { setIdIfNotUndefine } from "../../Utils/FilterHelper";
+import { setDateFilter } from "../../Utils/FilterHelper";
+import { TokenInfo } from "../../Middlewares/Token";
 
 const entity = "Speech type";
 
-export async function createSpeechType(name : string, description : string, creator : string) : Promise<SpeechTypeDto>
+export async function createSpeechType(name : string, description : string, token : TokenInfo) : Promise<SpeechTypeDto>
 {
     const newSpeechType = new SpeechTypeModel({
         Name : name,
         Description : description,
         CreatedAt : new Date(),
-        Creator : (creator)
+        Creator : new mongoose.Types.ObjectId(token.Id),
+        Status : token.Role == roleEnumTs.admin ? statusEnumTs.approved : statusEnumTs.submitted
     });
     const result = await newSpeechType.save();
     return convertSpeechTypeToDto(result);
@@ -20,22 +26,10 @@ export async function createSpeechType(name : string, description : string, crea
 export async function findSpeechTypes(name? : string, description? : string, creator? : string, createdFrom? : Date, createdTo? : Date) : Promise<SpeechTypeDto[]> 
 {
     const filter = {} as any;
-    if(name !== undefined) filter.Name = {$regex : new RegExp(name as string, 'i')};
-    if(description !== undefined) filter.Description = {$regex : new RegExp(description as string, 'i')}
-    if(creator !== undefined) filter.Creator = new mongoose.Types.ObjectId(creator); 
-    if(createdFrom !== undefined){
-        filter.CreatedAt = {
-            $gte : createdFrom
-        };
-        if(createdTo !== undefined) {
-            filter.CreatedAt.$lte = createdTo;
-        }
-    }
-    else if(createdTo !== undefined){
-        filter.CreatedAt = {
-            $lte : createdTo
-        };
-    }
+    setRegexIfNotUndefine(filter, "Name", name);
+    setRegexIfNotUndefine(filter, "Description", description);
+    setIdIfNotUndefine(filter, "Creator", creator);
+    setDateFilter(filter, createdFrom, createdTo);
     const querySpeechTypeResult = await SpeechTypeModel.find({$or : 
         [
             filter
@@ -52,22 +46,29 @@ export async function findSpeechType(name : string)
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
     return convertSpeechTypeToDto(querySpeechType);
 }
-export async function updateSpeechType(speechTypeId : string, creator : string, name? : string, description? : string, createdAt? : Date) : Promise<SpeechTypeDto>
+export async function updateSpeechType(speechTypeId : string, token : TokenInfo, name? : string, description? : string, createdAt? : Date) : Promise<SpeechTypeDto>
 {
     const filter = {
         _id : speechTypeId,
-        Creator : new mongoose.Types.ObjectId(creator)
+        Creator : new mongoose.Types.ObjectId(token.Id)
     };
     var update : any = {};
-    if(name !== undefined) update.Name = name;
-    if(description !== undefined) update.Description = description;
-    if(createdAt !== undefined) update.CreatedAt = createdAt;
+    setValueIfNotUndefine(update, "Name", name);
+    setValueIfNotUndefine(update, "Description", description);
+    setValueIfNotUndefine(update, "CreatedAt", createdAt);
+    setStatusBaseOnRole(token.Role); 
     const querySpeechType = await SpeechTypeModel.findOneAndUpdate(filter, update, {new : true});
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
     return convertSpeechTypeToDto(querySpeechType);
 }
-export async function deleteSpeechType(name : string, creator : string){
-    const querySpeechType = await SpeechTypeModel.find({Name : name, Creator : new mongoose.Types.ObjectId(creator)});
+export async function deleteSpeechType(speechTypeId : string, token : TokenInfo){
+    let querySpeechType;
+    if(token.Role === roleEnumTs.user){
+        querySpeechType = await SpeechTypeModel.find({_id : speechTypeId, Creator : new mongoose.Types.ObjectId(token.Id)});
+    }
+    else if(token.Role === roleEnumTs.admin){
+        querySpeechType = await SpeechTypeModel.find({_id : speechTypeId});
+    }
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
     await WordModel.remove({SpeechType : querySpeechType});
     await SpeechTypeModel.findOneAndDelete(querySpeechType);

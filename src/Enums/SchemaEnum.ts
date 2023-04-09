@@ -14,3 +14,8 @@ export enum statusEnumTs {
     deleted = "deleted",
     reported = "rejected"
 };
+
+export function setStatusBaseOnRole(role : string) : string
+{
+    return role === roleEnumTs.admin ? statusEnumTs.approved : statusEnumTs.submitted;
+}

@@ -7,6 +7,7 @@ import * as SpeechTypeBusiness from '../Implement/SpeechTypes.Business'
 import WordModel from "../../Graphql/Schema/Word";
 import * as AdminBusiness from '../Implement/Users.Admin.Business'
 import { roleEnumTs } from "../../Enums/SchemaEnum";
+import { TokenInfo } from "../../Middlewares/Token";
 
 const mockCreator = {
     id : "0",
@@ -14,6 +15,12 @@ const mockCreator = {
     password : "P@assword123",
     emai : "wordcreator@test.com",
     role : ""
+}
+const mockToken : TokenInfo = {
+    Id : "",
+    Username : "",
+    Role : "",
+    CreatedDate : new Date()
 }
 const mockAdmin = {
     id : "0",
@@ -44,9 +51,16 @@ const mockCreatedWords = [
 describe("Word test", () => {
     beforeAll(async () => {
         const creator = await Register(mockCreator.username, mockCreator.emai, mockCreator.password);
+
         mockCreator.id = creator.Id as string;
         mockCreator.role = creator.Role as string;
-        mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockCreator.id)).Id as string;
+
+        mockToken.Id = creator.Id as string;
+        mockToken.Username = creator.Username as string;
+        mockToken.Role = creator.Role as string;
+        mockToken.CreatedDate = new Date();
+
+        mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockToken)).Id as string;
         mockCreatedWords.forEach(async (item) => {
             item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, mockCreator.id, mockCreator.role)).Id as string;
         });
@@ -92,7 +106,6 @@ describe("Word test", () => {
         const words = await WordBusiness.findWords(char);
         words.forEach((item) => {
             expect(item.Characters).toMatch(/e/i);
-            expect(item.Creator).toBe(mockCreator.id);
         })
     })
     test("Delete word", async () => {

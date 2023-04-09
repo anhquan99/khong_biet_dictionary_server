@@ -6,7 +6,8 @@ export interface SpeechTypeDto
     Name? : string,
     Creator? : string,
     CreatedAt? : Date,
-    Description? : string
+    Description? : string,
+    Status? : string
 }
 
 export function convertSpeechTypeToDto(speechType : any) : SpeechTypeDto{
@@ -15,6 +16,7 @@ export function convertSpeechTypeToDto(speechType : any) : SpeechTypeDto{
         Name : speechType.Name,
         Description : speechType.Description,
         CreatedAt : speechType.CreatedAt,
-        Creator : speechType.Creator?._id.toString()
+        Creator : speechType.Creator?._id.toString(),
+        Status : speechType.Status
     }
 }

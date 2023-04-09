@@ -6,6 +6,7 @@ import * as UserBusiness from '../Implement/Users.Business'
 import * as WordBusiness from '../Implement/Words.Bussiness'
 import * as SpeechTypeBusiness from '../Implement/SpeechTypes.Business'
 import PharseModel from "../../Graphql/Schema/Pharse";
+import { TokenInfo } from "../../Middlewares/Token";
 
 const mockCreator = {
     id : "0",
@@ -14,7 +15,12 @@ const mockCreator = {
     emai : "pharsecreator@test.com",
     role : ""
 }
-
+const mockToken : TokenInfo = {
+    Id : "",
+    Username : "",
+    Role : "",
+    CreatedDate : new Date()
+}
 const mockWord = {
     id : "0",
     characters : "Black" 
@@ -55,9 +61,16 @@ const mockCreatedPharse = [
 describe("Pharse test", () => {
     beforeAll(async () => {
         const creator  = await UserBusiness.Register(mockCreator.username, mockCreator.emai, mockCreator.password);
+
+        mockToken.Id = creator.Id as string;
+        mockToken.Username = creator.Username as string;
+        mockToken.Role = creator.Role as string;
+        mockToken.CreatedDate = new Date();
+
         mockCreator.id = creator.Id as string;
         mockCreator.role = creator.Role as string;
-        mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockCreator.id)).Id as string;
+
+        mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockToken)).Id as string;
 
         for(let item of mockCreatedWords){
             item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, mockCreator.id, mockCreator.role)).Id as string;

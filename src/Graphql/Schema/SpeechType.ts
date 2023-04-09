@@ -2,6 +2,7 @@ import {model, Schema} from "mongoose";
 import validator from "validator";
 
 import { InvalidField, MaxStringLength } from "../../Enums/ErrorMessageEnum";
+import StatusSchema from "./Attribute/Status";
 
 const _maxStringLength = 100
 
@@ -36,7 +37,8 @@ const SppechTypeSchema = new Schema({
     CreatedAt : {
         type : Date,
         required : true
-    }
+    },
+    Status: StatusSchema
 });
 
 const SpeechTypeModel = model("SpeechType", SppechTypeSchema);

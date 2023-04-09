@@ -5,6 +5,7 @@ import WordModel from "../../Graphql/Schema/Word";
 
 import { createSpeechType, deleteSpeechType, findSpeechType, findSpeechTypes, updateSpeechType } from "../Implement/SpeechTypes.Business";
 import { Login, Register } from "../Implement/Users.Business";
+import { TokenInfo } from "../../Middlewares/Token";
 
 const mockST = {
     name : "Noun",
@@ -25,18 +26,31 @@ const mockCreator = {
     email : "stcreator@test.com",
     id : "0"
 };
+const mockToken : TokenInfo = {
+    Id : "",
+    Username : "",
+    Role : "",
+    CreatedDate : new Date()
+}
 
 describe("Speech type test", () => {
     beforeAll(async () => {
         const creator = await Register(mockCreator.username, mockCreator.email, mockCreator.password);
+
         mockCreator.id = creator.Id as string;
-        const secondSt = await createSpeechType(mockSecondSt.name, mockSecondSt.description, mockCreator.id);
+
+        mockToken.Id = creator.Id as string;
+        mockToken.Username =creator.Username as string;
+        mockToken.Role = creator.Role as string;
+        mockToken.CreatedDate = new Date();
+
+        const secondSt = await createSpeechType(mockSecondSt.name, mockSecondSt.description, mockToken);
         mockSecondSt.id = secondSt.Id as string;
-        await createSpeechType(mockThirdSt.name, mockThirdSt.description, mockCreator.id);
+        await createSpeechType(mockThirdSt.name, mockThirdSt.description, mockToken);
     });
     describe("Speech type", () => {
         test("Create speech type", async () => {
-            const st = await createSpeechType(mockST.name, mockST.description, mockCreator.id as string);
+            const st = await createSpeechType(mockST.name, mockST.description, mockToken);
             expect(st.Name as string).toBe(mockST.name);
             expect(st.Description as string).toBe(mockST.description);
             expect(st.Creator as string).toBe(mockCreator.id as string);
@@ -58,7 +72,7 @@ describe("Speech type test", () => {
             const newDescription = "Updated description";
             const newName = "Updated name";
             const newDate = new Date();
-            const st = await updateSpeechType(mockSecondSt.id, mockCreator.id , newName, newDescription, newDate);
+            const st = await updateSpeechType(mockSecondSt.id, mockToken , newName, newDescription, newDate);
             expect(st.Name).toBe(newName);
             expect(st.Description).toBe(newDescription);
             expect(st.CreatedAt).toStrictEqual(newDate);
@@ -66,7 +80,7 @@ describe("Speech type test", () => {
         test("Delete speech type", async () => {
             const speechTypeSpy = jest.spyOn(SpeechTypeModel, "findOneAndDelete")
             const wordSpy = jest.spyOn(WordModel, "remove");
-            await deleteSpeechType(mockST.name, mockCreator.id);
+            await deleteSpeechType(mockSecondSt.id, mockToken);
             expect(speechTypeSpy).toBeCalledTimes(1);
             expect(wordSpy).toBeCalledTimes(1);
         })

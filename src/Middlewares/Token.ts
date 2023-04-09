@@ -9,7 +9,8 @@ export interface AuthContext {
 export interface TokenInfo {
     Id : string,
     Username : string,
-    Role : string
+    Role : string,
+    CreatedDate : Date
 }
 export function GenerateToken(user : UserDto) : string
 {
@@ -17,7 +18,8 @@ export function GenerateToken(user : UserDto) : string
         {
             Id : user.Id,
             Username : user.Username,
-            Role : user.Role    
+            Role : user.Role,
+            CreatedDate : new Date()
         },
         env.SECRET_KEY,
         {expiresIn : "1h"}

@@ -19,18 +19,18 @@ const SpeechTypes = {
     Mutation : {
         async SpeechType(_ : any, {name, description} : {name : string, description? : string}, context : ExpressContextFunctionArgument)
         {
-            const user : TokenInfo = Authen(context);
-            return await Business.createSpeechType(name, description as string, user.Id);
+            const token : TokenInfo = Authen(context);
+            return await Business.createSpeechType(name, description as string, token);
         },
         async UpdateSpeechType(_ : any, {speechTypeId, name, description, createdAt} : {speechTypeId : string, name? : string, description : string, createdAt : Date}, context : ExpressContextFunctionArgument)
         {
-            const user = Authen(context);
-            return await Business.updateSpeechType(speechTypeId, user.Id, name, description, createdAt);
+            const token = Authen(context);
+            return await Business.updateSpeechType(speechTypeId, token, name, description, createdAt);
         },
-        async DeleteSpeechType(_ : any, {name} : {name : string}, context : ExpressContextFunctionArgument)
+        async DeleteSpeechType(_ : any, {speechTypeId} : {speechTypeId : string}, context : ExpressContextFunctionArgument)
         {
-            const user = Authen(context);
-            await Business.deleteSpeechType(name, user.Id);
+            const token = Authen(context);
+            await Business.deleteSpeechType(speechTypeId, token);
             return "Success!";
         }
     }

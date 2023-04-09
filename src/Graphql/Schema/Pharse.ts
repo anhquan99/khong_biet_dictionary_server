@@ -3,6 +3,7 @@ import validator from "validator";
 
 import { InvalidField } from "../../Enums/ErrorMessageEnum";
 import StatusSchema from "./Attribute/Status";
+import VoteSchema from "./Attribute/Vote";
 
 const entity = "pharse";
 
@@ -31,7 +32,8 @@ const PharseSchema = new Schema({
         require : true,
         ref : "Word"
     }],
-    Status : StatusSchema
+    Status : StatusSchema,
+    Votes : [VoteSchema]
 });
 
 const PharseModel = model("Pharse", PharseSchema);

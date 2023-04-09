@@ -1,7 +1,8 @@
+import mongoose from "mongoose";
+
 import WordModel from "../../Graphql/Schema/Word";
 import {WordDto, convertWordToDto} from "../../Graphql/Dtos/Word.Dto";
 import { TokenInfo } from "../../Middlewares/Token";
-import mongoose from "mongoose";
 import { roleEnumTs, setStatusBaseOnRole } from "../../Enums/SchemaEnum";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
 import { setDateFilter, setIdIfNotUndefine, setNumberRangeIfNotUndefine, setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
@@ -68,13 +69,13 @@ export async function updateWord(wordId : string, token : TokenInfo, characters?
 export async function voteWord(wordId : string, token : TokenInfo, isUpVote : boolean){
     const word = await WordModel.findById(wordId);
     const vote = word?.Votes.find(x => x.Voter._id === token.Id);
-    if(vote && vote.isUpVote === isUpVote)
+    if(vote && vote.IsUpVote === isUpVote)
     {
         word?.Votes.splice(word?.Votes.indexOf(vote),1);
     }
     else if(vote)
     {
-        vote.isUpVote = isUpVote;
+        vote.IsUpVote = isUpVote;
     }
     else
     {
@@ -85,11 +86,7 @@ export async function voteWord(wordId : string, token : TokenInfo, isUpVote : bo
         }
         word?.Votes.push(newVote);
         await word?.save();
-        return convertVoteToDto({
-            Voter : new mongoose.Types.ObjectId(token.Id),
-            CreatedAt : new Date(),
-            IsUpVote : isUpVote
-        });
+        return convertVoteToDto(newVote);
     }
     await word?.save();
     return convertVoteToDto(vote);

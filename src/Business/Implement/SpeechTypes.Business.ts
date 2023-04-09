@@ -8,6 +8,7 @@ import { setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/Filter
 import { setIdIfNotUndefine } from "../../Utils/FilterHelper";
 import { setDateFilter } from "../../Utils/FilterHelper";
 import { TokenInfo } from "../../Middlewares/Token";
+import { convertVoteToDto } from "../../Graphql/Dtos/Attribute/Vote.Dto";
 
 const entity = "Speech type";
 
@@ -63,6 +64,31 @@ export async function updateSpeechType(speechTypeId : string, token : TokenInfo,
     const querySpeechType = await SpeechTypeModel.findOneAndUpdate(filter, update, {new : true});
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
     return convertSpeechTypeToDto(querySpeechType);
+}
+export async function voteSpeechType(speechTypeId : string, token : TokenInfo, isUpVote : boolean){
+    const speechType = await SpeechTypeModel.findById(speechTypeId);
+    const vote = speechType?.Votes.find(x => x.Voter._id === token.Id);
+    if(vote && vote.IsUpVote === isUpVote)
+    {
+        speechType?.Votes.splice(speechType?.Votes.indexOf(vote),1);
+    }
+    else if(vote)
+    {
+        vote.IsUpVote = isUpVote;
+    }
+    else
+    {
+        const newVote = {
+            Voter : new mongoose.Types.ObjectId(token.Id),
+            CreatedAt : new Date(),
+            IsUpVote : isUpVote
+        }
+        speechType?.Votes.push(newVote);
+        await speechType?.save();
+        return convertVoteToDto(newVote);
+    }
+    await speechType?.save();
+    return convertVoteToDto(vote);
 }
 export async function deleteSpeechType(speechTypeId : string, token : TokenInfo){
     let querySpeechType;

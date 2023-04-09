@@ -5,6 +5,7 @@ import { setDateFilter, setValueIfNotUndefine, setRegexIfNotUndefine, setArrObje
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
 import { TokenInfo } from "../../Middlewares/Token";
 import { roleEnumTs, setStatusBaseOnRole } from "../../Enums/SchemaEnum";
+import { convertVoteToDto } from "../../Graphql/Dtos/Attribute/Vote.Dto";
 
 const entity = "Pharse";
 
@@ -14,7 +15,8 @@ export async function createPharse(pharse : string, token : TokenInfo, words : [
         Creator : new mongoose.Types.ObjectId(token.Id),
         CreatedAt : new Date(),
         Words : words.map((item) => new mongoose.Types.ObjectId(item)),
-        Status : setStatusBaseOnRole(token.Role)
+        Status : setStatusBaseOnRole(token.Role),
+        Votes : []
    });
    const result = await newPhrase.save();
    return convertPharseToDto(result);
@@ -54,7 +56,31 @@ export async function updatePharse(pharseId : string, token : TokenInfo, pharse?
     if(!queryPharse) throw new Error(NotFoundMessage(entity));
     return convertPharseToDto(queryPharse);
 }
-
+export async function votePharse(pharseId : string, token : TokenInfo, isUpVote : boolean){
+    const pharse = await PharseModel.findById(pharseId);
+    const vote = pharse?.Votes.find(x => x.Voter._id === token.Id);
+    if(vote && vote.IsUpVote === isUpVote)
+    {
+        pharse?.Votes.splice(pharse?.Votes.indexOf(vote),1);
+    }
+    else if(vote)
+    {
+        vote.IsUpVote = isUpVote;
+    }
+    else
+    {
+        const newVote = {
+            Voter : new mongoose.Types.ObjectId(token.Id),
+            CreatedAt : new Date(),
+            IsUpVote : isUpVote
+        }
+        pharse?.Votes.push(newVote);
+        await pharse?.save();
+        return convertVoteToDto(newVote);
+    }
+    await pharse?.save();
+    return convertVoteToDto(vote);
+}
 export async function deletePharse(pharseId : string, token : TokenInfo){
     if(token.Role === roleEnumTs.user){
         await PharseModel.findOneAndDelete({_id : new mongoose.Types.ObjectId(pharseId), Creator : new mongoose.Types.ObjectId(token.Id)});

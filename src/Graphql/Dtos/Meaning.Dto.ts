@@ -1,6 +1,6 @@
 import { CommentDto, convertCommentToDto } from "./Attribute/Comment.Dto";
 import { VoteDto, convertVoteToDto } from "./Attribute/Vote.Dto";
-import { BookmarkDto, convertBookmarkToDto } from "./Attribute/Bookmark.Dto";
+import { BookmarkDto, convertBookmarkToDto } from "./Bookmark.Dto";
 import { SpeechTypeDto } from "./SpeechType.Dto";
 
 export interface MeaningDto{
@@ -33,9 +33,6 @@ export function convertMeaningToDto(meaning : any) : MeaningDto{
         }),
         Comments : meaning.Comments.forEach( (x : any) => {
             convertCommentToDto(x);
-        }),
-        Bookmarks : meaning.Bookmarks.forEach((x : any) => {
-            convertBookmarkToDto(x);
         }),
         SpeechType : meaning.SpeechType._id.toString()
     };

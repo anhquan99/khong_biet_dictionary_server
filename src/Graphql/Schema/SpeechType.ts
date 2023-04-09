@@ -3,6 +3,7 @@ import validator from "validator";
 
 import { InvalidField, MaxStringLength } from "../../Enums/ErrorMessageEnum";
 import StatusSchema from "./Attribute/Status";
+import VoteSchema from "./Attribute/Vote";
 
 const _maxStringLength = 100
 
@@ -38,7 +39,8 @@ const SppechTypeSchema = new Schema({
         type : Date,
         required : true
     },
-    Status: StatusSchema
+    Status: StatusSchema,
+    Votes : [VoteSchema]
 });
 
 const SpeechTypeModel = model("SpeechType", SppechTypeSchema);

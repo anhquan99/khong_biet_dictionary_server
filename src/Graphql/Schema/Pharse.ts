@@ -2,6 +2,7 @@ import mongoose, { model, Schema } from "mongoose";
 import validator from "validator";
 
 import { InvalidField } from "../../Enums/ErrorMessageEnum";
+import StatusSchema from "./Attribute/Status";
 
 const entity = "pharse";
 
@@ -29,7 +30,8 @@ const PharseSchema = new Schema({
         type : mongoose.Types.ObjectId,
         require : true,
         ref : "Word"
-    }]
+    }],
+    Status : StatusSchema
 });
 
 const PharseModel = model("Pharse", PharseSchema);

@@ -19,19 +19,19 @@ const Meanings ={
         async Meaning(_ : any, {meaning, word, isSlang, speechType, example} : 
             {meaning : string, word: string, isSlang : boolean, speechType : string, example? : [string]}, context : ExpressContextFunctionArgument)
         {
-            const user : TokenInfo = Authen(context);
-            return await Business.createMeaning(meaning, word, isSlang, speechType, user.Id, user.Role, example);
+            const token : TokenInfo = Authen(context);
+            return await Business.createMeaning(meaning, word, isSlang, speechType, token, example);
         }, 
         async UpdateMeaning(_ : any, {meaningId, meaning, example, createdAt, status, isSlang} : 
             {meaningId : string, meaning? : string, 
                 example? : [string], createdAt? : Date, status? : string, isSlang? : boolean}, context :ExpressContextFunctionArgument)
         {
-            const user : TokenInfo = Authen(context);
-            return await Business.updateMeaning(meaningId, user.Id, meaning, example, createdAt, status, isSlang);
+            const token : TokenInfo = Authen(context);
+            return await Business.updateMeaning(meaningId, token, meaning, example, createdAt, status, isSlang);
         },
         async DeleteMeaning(_ : any, {meaningId} : {meaningId : string}, context : ExpressContextFunctionArgument){
-            const user : TokenInfo = Authen(context);
-            await Business.deleteMeaning(meaningId, user.Id);
+            const token : TokenInfo = Authen(context);
+            await Business.deleteMeaning(meaningId, token);
             return "Success!";
         }
     }

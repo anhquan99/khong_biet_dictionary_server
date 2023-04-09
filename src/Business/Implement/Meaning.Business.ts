@@ -2,19 +2,19 @@ import MeaningModel from "../../Graphql/Schema/Meaning";
 import { MeaningDto, convertMeaningToDto } from "../../Graphql/Dtos/Meaning.Dto";
 import { TokenInfo } from "../../Middlewares/Token";
 import mongoose from "mongoose";
-import { roleEnumTs, statusEnumTs } from "../../Enums/SchemaEnum";
+import { roleEnumTs, setStatusBaseOnRole, statusEnumTs } from "../../Enums/SchemaEnum";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
 import { setDateFilter, setIdIfNotUndefine, setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
 
 const entity = "Meaning";
 
-export async function createMeaning(meaning : string, word : string, isSlang : boolean, speechType : string, creator : string, role : string, example? : [string]){
+export async function createMeaning(meaning : string, word : string, isSlang : boolean, speechType : string, token : TokenInfo, example? : [string]){
     const newMeaning = new MeaningModel({
         Meaning : meaning,
-        Creator : new mongoose.Types.ObjectId(creator),
+        Creator : new mongoose.Types.ObjectId(token.Id),
         Word : new mongoose.Types.ObjectId(word),
         Example : example,
-        Status : role === roleEnumTs.admin ? statusEnumTs.approved : statusEnumTs.submitted,
+        Status : setStatusBaseOnRole(token.Role),
         IsSlang : isSlang,
         SpeechType : new mongoose.Types.ObjectId(speechType)
     });
@@ -47,13 +47,15 @@ export async function findMeanings(meaning? : string, creator? : string, word? :
     });
     return result;
 }
-export async function updateMeaning(meaningId : string, creator : string, meaning? : string, 
+export async function updateMeaning(meaningId : string, token : TokenInfo, meaning? : string, 
             example? : [string], createdAt? : Date, status? : string, isSlang? : boolean)
 {
-    const filter = {
+    const filter : any = {
         _id : new mongoose.Types.ObjectId(meaningId),
-        creator : new mongoose.Types.ObjectId(creator)
     };
+    if(token.Role === roleEnumTs.user){
+        filter.Creator = new mongoose.Types.ObjectId(token.Id);
+    }
     const update = {} as any;
     setValueIfNotUndefine(update, "Meaning", meaning);
     setValueIfNotUndefine(update, "Example", example);
@@ -63,7 +65,14 @@ export async function updateMeaning(meaningId : string, creator : string, meanin
     const result = await MeaningModel.findOneAndUpdate(filter, update, {new : true});
     return convertMeaningToDto(result);
 }
-export async function deleteMeaning(meaingId : string, creator : string)
+export async function deleteMeaning(meaingId : string, token : TokenInfo)
 {
-    await MeaningModel.findOneAndDelete({_id : meaingId, Creator : new mongoose.Types.ObjectId(creator)});
+    if(token.Role === roleEnumTs.user)
+    {
+        await MeaningModel.findOneAndDelete({_id : meaingId, Creator : new mongoose.Types.ObjectId(token.Id)});
+    }
+    else if(token.Role === roleEnumTs.admin)
+    {
+        await MeaningModel.findOneAndDelete({_id : meaingId});
+    }
 }

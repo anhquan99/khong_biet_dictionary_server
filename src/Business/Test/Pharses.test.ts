@@ -80,7 +80,7 @@ describe("Pharse test", () => {
         }
         let i = 0;
         for(let item of mockCreatedPharse){
-            const newPharse = await PharseBusiness.createPharse(item.pharse, mockCreator.id, [mockCreatedWords[i].id]);
+            const newPharse = await PharseBusiness.createPharse(item.pharse, mockToken, [mockCreatedWords[i].id]);
             item.id = newPharse.Id as string;
             item.words = newPharse.Words;
             i++;
@@ -90,7 +90,7 @@ describe("Pharse test", () => {
         let words = [] as any;
         words.push(mockCreatedWords[0].id);
         words.push(mockCreatedWords[1].id);
-        const pharse = await PharseBusiness.createPharse(mockPharse.pharse, mockCreator.id, words);
+        const pharse = await PharseBusiness.createPharse(mockPharse.pharse, mockToken, words);
         mockPharse.id = pharse.Id as string;
         expect(pharse.Pharse).toBe(mockPharse.pharse);
         expect(pharse.Creator).toBe(mockCreator.id);
@@ -120,13 +120,13 @@ describe("Pharse test", () => {
             pharse : "The aqua sky was a beautiful backdrop to the gray buildings.",
             createdAt : new Date()
         }
-        const updatedPharse = await PharseBusiness.updatePharse(mockPharse.id, mockCreator.id, update.pharse, update.createdAt);
+        const updatedPharse = await PharseBusiness.updatePharse(mockPharse.id, mockToken, update.pharse, update.createdAt);
         expect(updatedPharse.Pharse).toBe(update.pharse);
         expect(updatedPharse.CreatedAt).toStrictEqual(update.createdAt);
     })
     test("Delete pharse", async () => {
         const pharseSpy = jest.spyOn(PharseModel, "findOneAndDelete");
-        await PharseBusiness.deletePharse(mockPharse.id, mockCreator.id);
+        await PharseBusiness.deletePharse(mockPharse.id, mockToken);
         expect(pharseSpy).toHaveBeenCalledTimes(1);
     })
 })

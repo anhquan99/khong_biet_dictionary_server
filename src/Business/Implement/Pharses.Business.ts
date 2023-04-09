@@ -3,15 +3,18 @@ import { PharseDto, convertPharseToDto } from "../../Graphql/Dtos/Pharse.Dto";
 import mongoose from "mongoose";
 import { setDateFilter, setValueIfNotUndefine, setRegexIfNotUndefine, setArrObjectIdIfNotUndefine, setIdIfNotUndefine } from "../../Utils/FilterHelper";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
+import { TokenInfo } from "../../Middlewares/Token";
+import { roleEnumTs, setStatusBaseOnRole } from "../../Enums/SchemaEnum";
 
 const entity = "Pharse";
 
-export async function createPharse(pharse : string, creator : string, words : [string]){
+export async function createPharse(pharse : string, token : TokenInfo, words : [string]){
    const newPhrase = new PharseModel({
         Pharse : pharse,
-        Creator : new mongoose.Types.ObjectId(creator),
+        Creator : new mongoose.Types.ObjectId(token.Id),
         CreatedAt : new Date(),
-        Words : words.map((item) => new mongoose.Types.ObjectId(item)) 
+        Words : words.map((item) => new mongoose.Types.ObjectId(item)),
+        Status : setStatusBaseOnRole(token.Role)
    });
    const result = await newPhrase.save();
    return convertPharseToDto(result);
@@ -33,15 +36,18 @@ export async function findPharses(pharse? : string, creator? : string, createdFr
     });
     return result;
 }
-export async function updatePharse(pharseId : string, creator : string, pharse? : string, createdAt? : Date, words? : [string])
+export async function updatePharse(pharseId : string, token : TokenInfo, pharse? : string, createdAt? : Date, words? : [string])
 {
-    const filter = {
-        _id : new mongoose.Types.ObjectId(pharseId),
-        Creator : new mongoose.Types.ObjectId(creator)
+    const filter : any = {
+        _id : new mongoose.Types.ObjectId(pharseId)
     };
+    if(token.Role === roleEnumTs.user)
+    {
+        filter.Creator = new mongoose.Types.ObjectId(token.Id);
+    }
     var update = {} as any;
     setValueIfNotUndefine(update, "Pharse", pharse);
-    setIdIfNotUndefine(update, "Creator", creator);
+    setIdIfNotUndefine(update, "Creator", token.Id);
     setValueIfNotUndefine(update, "CreatedAt", createdAt);
     setValueIfNotUndefine(update, "Words", words);
     const queryPharse = await PharseModel.findOneAndUpdate(filter, update, {new : true});
@@ -49,6 +55,11 @@ export async function updatePharse(pharseId : string, creator : string, pharse? 
     return convertPharseToDto(queryPharse);
 }
 
-export async function deletePharse(pharseId : string, creator : string){
-    await PharseModel.findOneAndDelete({_id : pharseId, Creator : new mongoose.Types.ObjectId(creator)});
+export async function deletePharse(pharseId : string, token : TokenInfo){
+    if(token.Role === roleEnumTs.user){
+        await PharseModel.findOneAndDelete({_id : new mongoose.Types.ObjectId(pharseId), Creator : new mongoose.Types.ObjectId(token.Id)});
+    }
+    else if(token.Role === roleEnumTs.admin){
+        await PharseModel.findOneAndDelete({_id : new mongoose.Types.ObjectId(pharseId)});
+    }
 }

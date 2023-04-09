@@ -16,15 +16,15 @@ const Pharses = {
     Mutation : {
         async Pharse(_ : any, {pharse, words} : {pharse : string, words : [string]}, context : ExpressContextFunctionArgument){
             const token = Authen(context);
-            return await Business.createPharse(pharse, token.Id, words);
+            return await Business.createPharse(pharse, token, words);
         },
         async UpdatePharse(_ : any, {pharseId, pharse, createdAt, words} : {pharseId : string, pharse? : string, createdAt? : Date, words? : [string]}, context : ExpressContextFunctionArgument){
             const token = Authen(context);
-            return await Business.updatePharse(pharseId, token.Id, pharse, createdAt, words);
+            return await Business.updatePharse(pharseId, token, pharse, createdAt, words);
         },
         async DeletePharse(_ : any, {pharseId} : {pharseId : string}, context : ExpressContextFunctionArgument){
             const token = Authen(context);
-             await Business.deletePharse(pharseId, token.Id);
+             await Business.deletePharse(pharseId, token);
              return "Sucess!";
         }
     }

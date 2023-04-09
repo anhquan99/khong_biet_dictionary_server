@@ -62,13 +62,13 @@ describe("Meaning test", () => {
         mockWord.id = ((await WordBusiness.createWord(mockWord.characters, mockSpeechType.id, mockWord.isDictionary, mockToken)).Id) as string;
         let i = 0;
         for(let item of mockCreatedMeanings){
-            const newMeaning = await MeaningBusiness.createMeaning(item.meaning as string, mockWord.id, false, mockSpeechType.id, mockCreator.id, mockCreator.role);
+            const newMeaning = await MeaningBusiness.createMeaning(item.meaning as string, mockWord.id, false, mockSpeechType.id, mockToken);
             item.id = newMeaning.Id as string;
             i++;
         }
     })
     test("Create meaning", async () => {
-        const newMeaning = await MeaningBusiness.createMeaning(mockMeaning.meaning, mockWord.id, false, mockSpeechType.id, mockCreator.id, mockCreator.role);
+        const newMeaning = await MeaningBusiness.createMeaning(mockMeaning.meaning, mockWord.id, false, mockSpeechType.id, mockToken);
         mockMeaning.id = newMeaning.Id as string;
         expect(newMeaning.Meaning).toBe(mockMeaning.meaning);
     })
@@ -84,12 +84,12 @@ describe("Meaning test", () => {
     })
     test("Update meaning", async () => {
         const updateMeaning = "Purple evokes power, mystery, extravaganza, and wisdom.";
-        const updatedMeaning = await MeaningBusiness.updateMeaning(mockMeaning.id, mockCreator.id, updateMeaning);
+        const updatedMeaning = await MeaningBusiness.updateMeaning(mockMeaning.id, mockToken, updateMeaning);
         expect(updatedMeaning.Meaning).toBe(updateMeaning);
     })
     test("Delete meaning", async () => {
         const meaningSpy = jest.spyOn(MeaningModel, "findOneAndDelete");
-        await MeaningBusiness.deleteMeaning(mockMeaning.id, mockCreator.id);
+        await MeaningBusiness.deleteMeaning(mockMeaning.id, mockToken);
         expect(meaningSpy).toHaveBeenCalledTimes(1);
     })
 })

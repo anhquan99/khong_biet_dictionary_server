@@ -6,6 +6,7 @@ import { options } from "./DbSetup";
 beforeAll(async() => {
     const testDbOptions = options;
     testDbOptions.dbName = env.TEST_DATABASE;
+    mongoose.set("strictQuery", true);
     await mongoose.connect(env.MONGODB, testDbOptions);
 });
 

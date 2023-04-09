@@ -79,7 +79,7 @@ describe("Speech type test", () => {
         })
         test("Delete speech type", async () => {
             const speechTypeSpy = jest.spyOn(SpeechTypeModel, "findOneAndDelete")
-            const wordSpy = jest.spyOn(WordModel, "remove");
+            const wordSpy = jest.spyOn(WordModel, "deleteMany");
             await deleteSpeechType(mockSecondSt.id, mockToken);
             expect(speechTypeSpy).toBeCalledTimes(1);
             expect(wordSpy).toBeCalledTimes(1);

@@ -2,19 +2,22 @@ import WordModel from "../../Graphql/Schema/Word";
 import {WordDto, convertWordToDto} from "../../Graphql/Dtos/Word.Dto";
 import { TokenInfo } from "../../Middlewares/Token";
 import mongoose from "mongoose";
-import { roleEnumTs } from "../../Enums/SchemaEnum";
+import { roleEnumTs, setStatusBaseOnRole } from "../../Enums/SchemaEnum";
 import { NotFoundMessage } from "../../Enums/ErrorMessageEnum";
+import { setDateFilter, setIdIfNotUndefine, setNumberRangeIfNotUndefine, setRegexIfNotUndefine, setValueIfNotUndefine } from "../../Utils/FilterHelper";
+import { convertVoteToDto } from "../../Graphql/Dtos/Attribute/Vote.Dto";
 
 const entity = "Word";
 
-export async function createWord(characters : string, speechTypeId : string, creator : string, role : string){
+export async function createWord(characters : string, speechTypeId : string, isDictionary : boolean, token : TokenInfo){
     const newWord = new WordModel({
         Characters : characters,
         CreatedAt : new Date(),
         NumberOfSearch : 0,
-        IsDictionary : role == roleEnumTs.admin ? true : false,
-        Creator : new mongoose.Types.ObjectId(creator),
+        IsDictionary : isDictionary,
+        Creator : new mongoose.Types.ObjectId(token.Id),
         SpeechType : new mongoose.Types.ObjectId(speechTypeId),
+        Status : setStatusBaseOnRole(token.Role),
         Votes : []
     });
     const result = await newWord.save();
@@ -29,35 +32,11 @@ export async function findWord(wordId : string){
 export async function findWords(characters? : string, creator? : string, speechTypeId? : string, createdFrom? : Date, createdTo? : Date, numberOfSearchFrom? : number, numberOfSearchTo? : number)
 {
     const filter = {} as any;
-    if(characters !== undefined) filter.Characters = {$regex : new RegExp(characters as string, 'i')};
-    if(creator !== undefined) filter.Creator = new mongoose.Types.ObjectId(creator);
-    if(speechTypeId !== undefined) filter.SpeechType = new mongoose.Types.ObjectId(speechTypeId);
-    if(createdFrom !== undefined){
-        filter.CreatedAt = {
-            $gte : createdFrom
-        };
-        if(createdTo !== undefined) {
-            filter.CreatedAt.$lte = createdTo;
-        }
-    }
-    else if(createdTo !== undefined){
-        filter.CreatedAt = {
-            $lte : createdTo
-        };
-    }
-    if(numberOfSearchFrom !== undefined){
-        filter.NumberOfSearch = {
-            $gte : numberOfSearchFrom
-        };
-        if(numberOfSearchTo !== undefined) {
-            filter.NumberOfSearch.$lte = numberOfSearchTo;
-        }
-    }
-    else if(numberOfSearchTo !== undefined){
-        filter.NumberOfSearch = {
-            $lte : numberOfSearchTo
-        };
-    }
+    setRegexIfNotUndefine(filter, "Characters", characters);
+    setIdIfNotUndefine(filter, "Creator", creator);
+    setIdIfNotUndefine(filter, "SpeechType", speechTypeId);
+    setDateFilter(filter, createdFrom, createdTo);
+    setNumberRangeIfNotUndefine(filter, "NumberOfSearch", numberOfSearchFrom, numberOfSearchTo);
     const queryWord = await WordModel.find({$or : [filter]});
     var result : WordDto[] = [];
     queryWord.forEach(x => {
@@ -66,23 +45,61 @@ export async function findWords(characters? : string, creator? : string, speechT
     return result;
 }
 
-export async function updateWord(wordId : string, creator : string, characters? : string, createdAt? : Date, numberOfSearch? : number, isDictionary? : boolean, speechType? : string)
+export async function updateWord(wordId : string, token : TokenInfo, characters? : string, createdAt? : Date, numberOfSearch? : number, isDictionary? : boolean, speechType? : string)
 {
-    const filter = {
-        _id : new mongoose.Types.ObjectId(wordId),
-        Creator : new mongoose.Types.ObjectId(creator)
+    const filter : any = {
+        _id : new mongoose.Types.ObjectId(wordId)
     };
+    if(token.Role === roleEnumTs.user)
+    {
+        filter.Creator = new mongoose.Types.ObjectId(token.Id);
+    }
     var update = {} as any;
-    if(characters !== undefined) update.Characters = characters;
-    if(createdAt !== undefined) update.CreatedAt = createdAt;
-    if(numberOfSearch !== undefined) update.NumberOfSearch = numberOfSearch;
-    if(isDictionary !== undefined) update.IsDictionary = isDictionary;
-    if(speechType !== undefined) update.SpeechType = new mongoose.Types.ObjectId(speechType);
+    setValueIfNotUndefine(update, "Characters", characters);
+    setValueIfNotUndefine(update, "CreatedAt", createdAt);
+    setValueIfNotUndefine(update, "NumberOfSearch", numberOfSearch);
+    setValueIfNotUndefine(update, "IsDictionary", isDictionary);
+    setIdIfNotUndefine(update, "SpeechType", speechType);
+    update.Status = setStatusBaseOnRole(token.Role);
     const queryWord = await WordModel.findOneAndUpdate(filter, update, {new : true});
     if(!queryWord) throw new Error(NotFoundMessage(entity));
     return convertWordToDto(queryWord);
 }
-
-export async function deleteWord(wordId : string, creator : string){
-    await WordModel.findOneAndDelete({_id : wordId, Creator : new mongoose.Types.ObjectId(creator)});
+export async function voteWord(wordId : string, token : TokenInfo, isUpVote : boolean){
+    const word = await WordModel.findById(wordId);
+    const vote = word?.Votes.find(x => x.Voter._id === token.Id);
+    if(vote && vote.isUpVote === isUpVote)
+    {
+        word?.Votes.splice(word?.Votes.indexOf(vote),1);
+    }
+    else if(vote)
+    {
+        vote.isUpVote = isUpVote;
+    }
+    else
+    {
+        const newVote = {
+            Voter : new mongoose.Types.ObjectId(token.Id),
+            CreatedAt : new Date(),
+            IsUpVote : isUpVote
+        }
+        word?.Votes.push(newVote);
+        await word?.save();
+        return convertVoteToDto({
+            Voter : new mongoose.Types.ObjectId(token.Id),
+            CreatedAt : new Date(),
+            IsUpVote : isUpVote
+        });
+    }
+    await word?.save();
+    return convertVoteToDto(vote);
+}
+export async function deleteWord(wordId : string, token : TokenInfo){
+    if(token.Role === roleEnumTs.admin){
+        await WordModel.findOneAndDelete({_id : wordId});
+    }
+    else if(token.Role === roleEnumTs.user)
+    {
+        await WordModel.findOneAndDelete({_id : wordId, Creator : new mongoose.Types.ObjectId(token.Id)});
+    }
 }

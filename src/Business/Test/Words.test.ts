@@ -29,9 +29,16 @@ const mockAdmin = {
     emai : "wordadmin@test.com",
     role : ""
 }
+const mockAdminToken : TokenInfo  = {
+    Id : "",
+    Username : "",
+    Role : "",
+    CreatedDate : new Date()
+}
 const mockWord = {
     id : "0",
-    characters : "Red"
+    characters : "Red",
+    isDictionary : true
 }
 const mockSpeechType = {
     id : "0",
@@ -41,11 +48,14 @@ const mockSpeechType = {
 const mockCreatedWords = [
     {
         id : "0",
-        characters : "Blue"
+        characters : "Blue",
+        isDictionary : true
+
     },
     {
         id : "0",
-        characters : "Yellow"
+        characters : "Yellow",
+        isDictionary : true
     }
 ]
 describe("Word test", () => {
@@ -62,18 +72,20 @@ describe("Word test", () => {
 
         mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockToken)).Id as string;
         mockCreatedWords.forEach(async (item) => {
-            item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, mockCreator.id, mockCreator.role)).Id as string;
+            item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, item.isDictionary, mockToken)).Id as string;
         });
         const admin = await AdminBusiness.RegisterAdmin(mockAdmin.username, mockAdmin.emai, mockAdmin.password);
-        mockAdmin.id = admin.Id as string;
-        mockAdmin.role = admin.Role as string;
+
+        mockAdminToken.Id = admin.Id as string;
+        mockAdminToken.Role = admin.Role as string;
+        mockAdminToken.Username = admin.Username as string;
     })
     test("Create word", async () => {
-        const word = await WordBusiness.createWord(mockWord.characters, mockSpeechType.id, mockCreator.id, mockCreator.role);
+        const word = await WordBusiness.createWord(mockWord.characters, mockSpeechType.id, mockWord.isDictionary, mockToken);
         expect(word.Characters).toBe(mockWord.characters);
         expect(isNaN(Date.parse(word.CreatedAt?.toString() as string))).toBeFalsy();
         expect(word.Creator).toBe(mockCreator.id);
-        expect(word.IsDictionary).toBeFalsy();
+        expect(word.IsDictionary).toBe(mockWord.isDictionary);
         expect(word.NumberOfSearch).toBe(0);
         expect(word.Votes.length).toBe(0);
     })
@@ -82,12 +94,12 @@ describe("Word test", () => {
         const word = await WordBusiness.findWord(tempWord.id);
         expect(word.Characters).toBe(tempWord.characters);
         expect(isNaN(Date.parse(word.CreatedAt?.toString() as string))).toBeFalsy();
-        expect(word.IsDictionary).toBeFalsy();
+        expect(word.IsDictionary).toBe(tempWord.isDictionary);
         expect(word.Votes.length).toBe(0);
         expect(word.NumberOfSearch).toBe(1);
     })
     test("Update word", async () => {
-        const newWord = await WordBusiness.createWord("White", mockSpeechType.id, mockCreator.id, mockCreator.role);
+        const newWord = await WordBusiness.createWord("White", mockSpeechType.id, mockWord.isDictionary, mockToken);
         const update = {
             characters : "Black",
             date : new Date(),
@@ -95,7 +107,7 @@ describe("Word test", () => {
             isDic : true
         } as any;
        
-        const updatedWord = await WordBusiness.updateWord(newWord.Id as string, mockCreator.id, update.characters, update.date, update.search, update.isDic);
+        const updatedWord = await WordBusiness.updateWord(newWord.Id as string, mockToken, update.characters, update.date, update.search, update.isDic);
         expect(updatedWord.Characters).toBe(update.characters);
         expect(updatedWord.CreatedAt).toStrictEqual(update.date);
         expect(updatedWord.NumberOfSearch).toBe(update.search);
@@ -110,11 +122,17 @@ describe("Word test", () => {
     })
     test("Delete word", async () => {
         const wordSpy = jest.spyOn(WordModel, "findOneAndDelete");
-        await WordBusiness.deleteWord(mockCreatedWords[0].id, mockCreator.id);
+        await WordBusiness.deleteWord(mockCreatedWords[0].id, mockToken);
         expect(wordSpy).toHaveBeenCalledTimes(1);
     })
     test("Create word with admin", async () => {
-        const word = await WordBusiness.createWord("White", mockSpeechType.id, mockAdmin.id, mockAdmin.role);
+        const word = await WordBusiness.createWord("White", mockSpeechType.id, true, mockAdminToken);
         expect(word.IsDictionary).toBeTruthy();
+    })
+    test("Vote word", async () => {
+        const word = mockCreatedWords[0];
+        const vote = await WordBusiness.voteWord(word.id, mockToken, true);
+        expect(vote.IsUpVote).toBeTruthy();
+        expect(vote.Voter).toBe(vote.Voter);
     })
 })

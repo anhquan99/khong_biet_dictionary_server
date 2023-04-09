@@ -27,6 +27,21 @@ export function setArrObjectIdIfNotUndefine(obj : any, field : string, value? : 
 export function setIdIfNotUndefine(obj : any, field : string, value? : string){
     if(value !== undefined) return new mongoose.Types.ObjectId(value);
 }
+export function setNumberRangeIfNotUndefine(obj : any, field : string, valueFrom? : number, valueTo? : number){
+    if(valueFrom !== undefined){
+        obj[field] = {
+            $gte : valueFrom
+        };
+        if(valueTo !== undefined) {
+            obj[field].$lte = valueTo;
+        }
+    }
+    else if(valueTo !== undefined){
+        obj[field] = {
+            $lte : valueTo
+        };
+    }
+}
 // export function setValueArrayIfNotUndefine(obj : any, field : string, value : any){
 //     if(value !== undefined) return obj[field] = {
 

@@ -48,15 +48,18 @@ export async function findSpeechType(name : string)
 }
 export async function updateSpeechType(speechTypeId : string, token : TokenInfo, name? : string, description? : string, createdAt? : Date) : Promise<SpeechTypeDto>
 {
-    const filter = {
-        _id : speechTypeId,
-        Creator : new mongoose.Types.ObjectId(token.Id)
+    const filter : any = {
+        _id : speechTypeId
     };
+    if(token.Role === roleEnumTs.user)
+    {
+        filter.Creator = new mongoose.Types.ObjectId(token.Id);
+    }
     var update : any = {};
     setValueIfNotUndefine(update, "Name", name);
     setValueIfNotUndefine(update, "Description", description);
     setValueIfNotUndefine(update, "CreatedAt", createdAt);
-    setStatusBaseOnRole(token.Role); 
+    update.Status = setStatusBaseOnRole(token.Role); 
     const querySpeechType = await SpeechTypeModel.findOneAndUpdate(filter, update, {new : true});
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
     return convertSpeechTypeToDto(querySpeechType);
@@ -70,6 +73,6 @@ export async function deleteSpeechType(speechTypeId : string, token : TokenInfo)
         querySpeechType = await SpeechTypeModel.find({_id : speechTypeId});
     }
     if(!querySpeechType) throw new Error(NotFoundMessage(entity));
-    await WordModel.remove({SpeechType : querySpeechType});
+    await WordModel.deleteMany({SpeechType : querySpeechType});
     await SpeechTypeModel.findOneAndDelete(querySpeechType);
 }

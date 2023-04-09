@@ -23,7 +23,8 @@ const mockToken : TokenInfo = {
 }
 const mockWord = {
     id : "0",
-    characters : "Purple" 
+    characters : "Purple",
+    isDictionary : true
 }
 const mockSpeechType = {
     id : "0",
@@ -58,7 +59,7 @@ describe("Meaning test", () => {
 
         mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockToken)).Id as string;
         
-        mockWord.id = ((await WordBusiness.createWord(mockWord.characters, mockSpeechType.id, mockCreator.id, mockCreator.role)).Id) as string;
+        mockWord.id = ((await WordBusiness.createWord(mockWord.characters, mockSpeechType.id, mockWord.isDictionary, mockToken)).Id) as string;
         let i = 0;
         for(let item of mockCreatedMeanings){
             const newMeaning = await MeaningBusiness.createMeaning(item.meaning as string, mockWord.id, false, mockSpeechType.id, mockCreator.id, mockCreator.role);

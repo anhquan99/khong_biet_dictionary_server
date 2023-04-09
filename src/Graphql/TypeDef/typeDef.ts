@@ -34,6 +34,11 @@ const typeDefs = `#graphql
     Status : String,
     IsSlang : Boolean
   }
+  type Vote{
+    Voter : String
+    CreatedAt : Date
+    IsUpVote : Boolean
+  }
   type Query {
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
@@ -52,6 +57,7 @@ const typeDefs = `#graphql
     DeleteSpeechType(name : String!) : String!
     Word(characters : String, speechTypeId : String) : Word
     UpdateWord(wordId : String!, characters : String, createdAt : Date, numberOfSearch : Int, isDictionary : Boolean, speechType : String) : Word
+    VoteWord(wordId : String!, isUpVote : Boolean!) : Vote
     DeleteWord(wordId : String!) : String!
     Pharse(pharse : String, words : [String]) : Pharse
     UpdatePharse(pharseId : String!, pharse : String, createdAt : Date, words : [String]) : Pharse

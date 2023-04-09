@@ -23,7 +23,8 @@ const mockToken : TokenInfo = {
 }
 const mockWord = {
     id : "0",
-    characters : "Black" 
+    characters : "Black",
+    isDictionary : true
 }
 const mockSpeechType = {
     id : "0",
@@ -33,11 +34,13 @@ const mockSpeechType = {
 const mockCreatedWords = [
     {
         id : "0",
-        characters : "Gray"
+        characters : "Gray",
+        isDictionary : true
     },
     {
         id : "0",
-        characters : "Aqua"
+        characters : "Aqua",
+        isDictionary : true
     },
     
 ]
@@ -73,7 +76,7 @@ describe("Pharse test", () => {
         mockSpeechType.id = (await SpeechTypeBusiness.createSpeechType(mockSpeechType.name, mockSpeechType.description, mockToken)).Id as string;
 
         for(let item of mockCreatedWords){
-            item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, mockCreator.id, mockCreator.role)).Id as string;
+            item.id = (await WordBusiness.createWord(item.characters, mockSpeechType.id, item.isDictionary, mockToken)).Id as string;
         }
         let i = 0;
         for(let item of mockCreatedPharse){

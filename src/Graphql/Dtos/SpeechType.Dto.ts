@@ -12,7 +12,7 @@ export interface SpeechTypeDto
 
 export function convertSpeechTypeToDto(speechType : any) : SpeechTypeDto{
     return {
-        Id : speechType._id,
+        Id : speechType._id.toString(),
         Name : speechType.Name,
         Description : speechType.Description,
         CreatedAt : speechType.CreatedAt,

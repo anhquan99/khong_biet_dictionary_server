@@ -39,6 +39,12 @@ const typeDefs = `#graphql
     CreatedAt : Date
     IsUpVote : Boolean
   }
+  type Bookmark{
+    Bookmarker : String
+    CreatedAt : Date
+    Type : String
+    Bookmark : String
+  }
   type Query {
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
@@ -49,6 +55,8 @@ const typeDefs = `#graphql
     Pharses(pharse : String, creator : String, createdFrom : Date, createdTo : Date, words : [String]) : [Pharse]
     Meaning(meaningId : String!) : Meaning
     Meanings(meaning : String, creator : String, words : String, createdFrom : Date, createdTo : Date, status : String, isSlang : Boolean, speechType : String) : [Meaning]
+    Bookmark(bookmarkId : String!) : Bookmark
+    Bookmarks(objectId : String, bookmarker : String, bookmarkType : String, createdFrom : Date, createdTo : Date) : [Bookmark]
   }
   type Mutation {
     Register(username : String, password : String, email : String) : String
@@ -65,6 +73,8 @@ const typeDefs = `#graphql
     Meaning(meaning : String, word : String, isSlang : Boolean, speechType : String, example : [String]) : Meaning
     UpdateMeaning(meaningId : String!, meaning : String, example : [String], createdAt : Date, status : String, isSlang : Boolean) : Meaning
     DeleteMeaning(meaningId : String!) : String
+    Bookmark(objectId : String!, type : String!) : Bookmark
+    DeleteBookmark(objectId : String!) : String
   }
 `;
 export default typeDefs;

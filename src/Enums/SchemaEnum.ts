@@ -20,4 +20,10 @@ export function setStatusBaseOnRole(role : string) : string
     return role === roleEnumTs.admin ? statusEnumTs.approved : statusEnumTs.submitted;
 }
 
-export const BookmarkTypeEnum = ["Word", "Meaning", "Pharse"];
+export const BookmarkTypeEnum = ["Word", "Meaning", "Pharse", "SpeechType"];
+export enum BookmarkTypeEnumTs {
+    Word = "Word", 
+    Meaning = "Meaning", 
+    Pharse = "Pharse",
+    SpeechType = "SpeechType"
+}

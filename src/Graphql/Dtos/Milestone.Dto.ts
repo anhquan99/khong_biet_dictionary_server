@@ -4,7 +4,8 @@ export interface MilestoneDto{
     MinLevel? : number,
     Title? : string,
     Description? : string,
-    CreatedAt? : Date
+    CreatedAt? : Date,
+    Creator? : string
 }
 
 export function convertMilestoneToDto(milestone : any) : MilestoneDto
@@ -15,6 +16,7 @@ export function convertMilestoneToDto(milestone : any) : MilestoneDto
         MinLevel : milestone.MinLevel,
         Title : milestone.Title,
         Description : milestone.Description,
-        CreatedAt : milestone.CreatedAt 
+        CreatedAt : milestone.CreatedAt ,
+        Creator : milestone.Creator._id.toString()
     }
 }

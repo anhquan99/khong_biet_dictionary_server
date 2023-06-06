@@ -10,7 +10,7 @@ const enableIndexDb = true;
 const env = {
     NODE_ENV: process.env.NODE_ENV || "dev",
     HOST: process.env.HOST || "localhost",
-    PORT: process.env.PORT || 3000,
+    PORT: process.env.PORT || 4000,
     MONGODB: process.env.MONGODB || `mongodb://${dbUser}:${dbPassword}@localhost:27017/?authMechanism=DEFAULT`,
     DATABASE: process.env.Database || "khong_biet_dic",
     TEST_DATABASE : "khong_biet_dic_test",

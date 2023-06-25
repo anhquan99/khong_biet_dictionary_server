@@ -24,12 +24,11 @@ async function startServer() : Promise<void>
             csrfPrevention: true,
             cache: "bounded",
             plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
-            // introspection : env.NODE_ENV !== 'prod'
         });
 
         await server.start();
 
-        app.use(
+        app.use(// TODO: apply graphql-upload middleware
             '/',
             cors<cors.CorsRequest>(),
             bodyParser.json({limit : '50mb'}),

@@ -1,5 +1,7 @@
+// TODO: implement milestone
 const typeDefs = `#graphql
   scalar Date
+  scalar Upload
   type SpeechType{
     Id : String
     Name : String

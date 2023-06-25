@@ -9,16 +9,20 @@ import { setRegexIfNotUndefine } from "../../Utils/FilterHelper";
 import { setDateFilter } from "../../Utils/FilterHelper";
 import { roleEnumTs } from "../../Enums/SchemaEnum";
 import { NotFoundMessage, PermissionDenied } from "../../Enums/ErrorMessageEnum";
+import { FileUploads } from "../../Upload";
+import { S3Helper, S3ConfigTemplate } from "../../Upload/S3Helper";
 
 const entity = "Milestone";
 
-export async function createMilestone(token : TokenInfo, title : string, minLevel : number, fileName : string, description? : string)
+export async function createMilestone(token : TokenInfo, title : string, minLevel : number, file : FileUploads.File, description? : string)
 {
     if(token.Role !== roleEnumTs.admin) throw new Error(PermissionDenied);
+    const s3Helper = new S3Helper(S3ConfigTemplate);
+    const fileResult = s3Helper.ingleFileUpload(file);
     const newMilestone = new MilestoneModel({
         Title : title,
         MinLevel : minLevel,
-        FileName : fileName,
+        FileName : fileResult,
         Creator : token.Id,
         CreatedAt : new Date()
     });
@@ -26,6 +30,7 @@ export async function createMilestone(token : TokenInfo, title : string, minLeve
         newMilestone.Description = description;
     }
     const result = await newMilestone.save();
+
     return convertMilestoneToDto(result);
 }
 export async function findMilestone(milestoneId : string){
@@ -33,10 +38,10 @@ export async function findMilestone(milestoneId : string){
     return convertMilestoneToDto(milestone);
 }
 
-export async function findMilestones(tile? : string, levelFrom? : number, levelTo? : number, fileName? : string, creator? : string, description? : string, createdFrom? : Date, createdTo? : Date)
+export async function findMilestones(title? : string, levelFrom? : number, levelTo? : number, fileName? : string, creator? : string, description? : string, createdFrom? : Date, createdTo? : Date)
 {
     var filter = {} as any;
-    setRegexIfNotUndefine(filter, "Title", tile);
+    setRegexIfNotUndefine(filter, "Title", title);
     setNumberRangeIfNotUndefine(filter, "MinLevel", levelFrom, levelTo);
     setValueIfNotUndefine(filter, "FileName", fileName);
     setIdIfNotUndefine(filter, "Creator", creator);
@@ -49,7 +54,7 @@ export async function findMilestones(tile? : string, levelFrom? : number, levelT
     });
     return result;
 }
-export async function updateMilestone(token : TokenInfo, milestoneId : string, title? : string, minLevel? : number, fileName? : string, description? : string)
+export async function updateMilestone(token : TokenInfo, milestoneId : string, title? : string, minLevel? : number, file? : FileUploads.File, description? : string)
 {
     if(token.Role !== roleEnumTs.admin) throw new Error(PermissionDenied);
     const filter = {
@@ -58,7 +63,12 @@ export async function updateMilestone(token : TokenInfo, milestoneId : string, t
     var update = {} as any;
     setValueIfNotUndefine(update, "Title", title);
     setValueIfNotUndefine(update, "MinLevel", minLevel);
-    setValueIfNotUndefine(update, "FileName", fileName);
+    if(file !== null || file !== undefined){
+        const s3Helper = new S3Helper(S3ConfigTemplate);
+        const fileResult = s3Helper.ingleFileUpload(file);
+        setValueIfNotUndefine(update, "FileName", fileResult);
+        // TODO: implement delete image function
+    }
     setValueIfNotUndefine(update, "Description", description);
     const updateMilestone = await MilestoneModel.findOneAndUpdate(filter, update, {new : true});
     if(!updateMilestone) throw new Error(NotFoundMessage(entity));
@@ -66,5 +76,6 @@ export async function updateMilestone(token : TokenInfo, milestoneId : string, t
 }
 export async function deleteMilestone(token : TokenInfo, milestoneId : string){
     if(token.Role !== roleEnumTs.admin) throw new Error(PermissionDenied);
+    // TODO: implement delete image function
     await MilestoneModel.findOneAndDelete({_id : new mongoose.Types.ObjectId(milestoneId)});
 }

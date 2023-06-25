@@ -20,6 +20,4 @@ const env = {
     S3_ENDPOINT : process.env.S3_ENDPOINT,
     S3_REGION : process.env.S3_REGION
 };
-
-console.log(env);
 export default env;

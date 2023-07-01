@@ -1,7 +1,8 @@
 import stream from 'stream'
 import fs from 'fs';
 import {FileUploads} from './index'
-import { PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
+import env from '../Utils/Config';
 
 type S3Config ={
     accessKeyId : string;
@@ -12,9 +13,8 @@ type S3Config ={
 };
 type S3UploadStream = {
     writeStream : stream.PassThrough;
-    promise : Promise<Any>
-};
-
+    promise : Promise<Any>;
+};  
 export class S3Helper implements FileUploads.IUploader{
     private s3: S3Client;
     public config : S3Config;
@@ -51,25 +51,31 @@ export class S3Helper implements FileUploads.IUploader{
     ): string{
         return filename;
     }
-    async ingleFileUpload(image: FileUpload.File){
-        const { createReadStream, filename, mimetype, encoding } = await image;
+    async singleFileUpload(file: FileUpload.File, timeStampFileName : string){
+        const { createReadStream, filename, mimetype, encoding } = (await file).file;
         const stream = createReadStream();
-        const filePath = this.createDestinationFilePath(filename, mimetype,encoding);
+        const filePath = this.createDestinationFilePath(timeStampFileName, mimetype,encoding);
         const uploadStream = this.createUploadStream(filePath);
         stream.pipe(uploadStream.writeStream);
-        return filename;
+        return timeStampFileName;
     }
-    // TODO: recheck this function should be used
-    async multipleImageFileUpload(files: FileUploads.File[]){
-        await Promise.all(files.map(async (File) => this.ingleFileUpload(file)));
-        return files.map(x => x.filename);
+    async removeFile(fileName: string){
+        const command = new DeleteObjectCommand({
+            Bucket : this.config.destinationBucketName,
+            Key : fileName
+        });
+        try{
+            await this.s3.send(command);
+        }
+        catch(err){
+            console.error(err);
+        }
     }
-    // TODO: create delete function
 }
 export const S3ConfigTemplate = {
     accessKeyId : env.S3_ACCESS_KEY_ID,
     secretAccessKey : env.S3_SECRET_ACCESS_KEY,
     destinationBucketName : env.S3_BUCKET,
     endpoint : env.S3_ENDPOINT,
-    region : env.S3_ENDPOINT
+    region : env.S3_REGION
 };

@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import {expressMiddleware} from '@apollo/server/express4';
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 
 import env from './Config'
 import typeDefs from '../Graphql/TypeDef/typeDef';
@@ -28,10 +29,11 @@ async function startServer() : Promise<void>
 
         await server.start();
 
-        app.use(// TODO: apply graphql-upload middleware
+        app.use(
             '/',
             cors<cors.CorsRequest>(),
             bodyParser.json({limit : '50mb'}),
+            graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
             expressMiddleware(server, {
                 context : async ({req }) => ({req})
             })

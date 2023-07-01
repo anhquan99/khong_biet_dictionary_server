@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.5.0",
+    "@aws-sdk/client-s3": "^3.363.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "concurrently": "^7.6.0",

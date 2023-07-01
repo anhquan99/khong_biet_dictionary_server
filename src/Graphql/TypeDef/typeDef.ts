@@ -1,4 +1,3 @@
-// TODO: implement milestone
 const typeDefs = `#graphql
   scalar Date
   scalar Upload
@@ -11,19 +10,19 @@ const typeDefs = `#graphql
   }
   type Word{
     Id : String,
-    Characters : String,
-    CreatedAt : Date,
-    NumberOfSearch : Int,
-    IsDictionary : Int,
-    Creator : String,
-    SpeechType : String,
+    Characters : String
+    CreatedAt : Date
+    NumberOfSearch : Int
+    IsDictionary : Int
+    Creator : String
+    SpeechType : String
     Votes : [String]
   }
   type Pharse{
     Id : String,
-    Pharse : String,
-    Creator : String,
-    CreatedAt : Date,
+    Pharse : String
+    Creator : String
+    CreatedAt : Date
     Words : [String]
   }
   type Meaning{
@@ -47,6 +46,14 @@ const typeDefs = `#graphql
     Type : String
     Bookmark : String
   }
+  type Milestone{
+    Title : String
+    MinLevel : Int
+    FileName : String
+    Creator : String
+    Description : String
+    CreatedAt : Date
+  }
   type Query {
     Login(username : String, password : String) : String,
     SpeechType(speechTypeName : String!) : SpeechType
@@ -59,6 +66,8 @@ const typeDefs = `#graphql
     Meanings(meaning : String, creator : String, words : String, createdFrom : Date, createdTo : Date, status : String, isSlang : Boolean, speechType : String) : [Meaning]
     Bookmark(bookmarkId : String!) : Bookmark
     Bookmarks(objectId : String, bookmarker : String, bookmarkType : String, createdFrom : Date, createdTo : Date) : [Bookmark]
+    Milestone(milestoneId : String!) : Milestone
+    Milestones(title : String, levelFrom : Int, levelTo : Int, fileName : String, creator : String, description : String, createdFrom : Date, createdTo : Date) : [Milestone]
   }
   type Mutation {
     Register(username : String, password : String, email : String) : String
@@ -77,6 +86,9 @@ const typeDefs = `#graphql
     DeleteMeaning(meaningId : String!) : String
     Bookmark(objectId : String!, type : String!) : Bookmark
     DeleteBookmark(objectId : String!) : String
+    Milestone(tilte : String!, minLevel : Int!, file : Upload!, description : String) : Milestone
+    UpdateMilestone(milestoneId : String!, title : String, minLevel : Int, file : Upload, description : String) : Milestone
+    DeleteMilestone(milestoneId : String!) : String
   }
 `;
 export default typeDefs;

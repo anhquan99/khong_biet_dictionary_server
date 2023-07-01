@@ -10,10 +10,10 @@ const Meanings ={
         {
             return await Business.findMilestone(milestoneId);
         },
-        async Milestones(_ : any, {title, levelFrom, levelTo, fileName, creator, description, createdFrom, createdTo} : 
-            {title? : string, levelFrom? : number, levelTo? : number, fileName? : string, creator? : string, description? : string, createdFrom? : Date, createdTo? : Date})
+        async Milestones(_ : any, {title, levelFrom, levelTo, creator, description, createdFrom, createdTo} : 
+            {title? : string, levelFrom? : number, levelTo? : number, creator? : string, description? : string, createdFrom? : Date, createdTo? : Date})
         {
-            return await Business.findMilestones(title, levelFrom, levelTo, fileName, creator, description, createdFrom, createdTo);
+            return await Business.findMilestones(title, levelFrom, levelTo, creator, description, createdFrom, createdTo);
         }
     },
     Mutation : {

@@ -5,6 +5,16 @@ import MilestoneModel from "../../Graphql/Schema/Milestone";
 import * as MilestoneBusiness from '../Implement/Milestone.Business'
 import * as AdminBusiness from '../Implement/Users.Admin.Business'
 import { TokenInfo } from "../../Middlewares/Token";
+import { S3Helper, S3ConfigTemplate } from "../../Upload/S3Helper";
+
+function createMockFile(filename : string){
+    const str = JSON.stringify("milestone data");
+    const blob = new Blob([str]);
+    const mockFile = new File([blob], filename, {
+        type: 'application/JSON',
+    });
+    return mockFile;
+}
 
 const mockAdmin = {
     id : "0",
@@ -16,7 +26,7 @@ const mockAdmin = {
 
 const mockMilestone = {
     Id : "",
-    FileName : "milestone.jpg",
+    File : Object.assign(createMockFile("milestone.jpg")),
     MinLevel : 1,
     Title : "Newbie",
     Description : "Mock milestone description newbie"
@@ -32,14 +42,14 @@ const mockToken : TokenInfo = {
 const mockCreatedMilestones = [
     {
         Id : "",
-        FileName : "milestone1.jpg",
+        File : Object.assign(createMockFile("milestone1.jpg")),
         MinLevel : 10,
         Title : "Intermediate",
         Description : "Mock milestone description intermediate"
     },
     {
         Id : "",
-        FileName : "milestone2.jpg",
+        File : Object.assign(createMockFile("milestone2.jpg")),
         MinLevel : 100,
         Title : "Advance",
         Description : "Mock milestone description advance"
@@ -59,15 +69,18 @@ describe("Milestone test", () => {
         mockToken.CreatedDate = creator.CreatedAt as Date;
 
         mockCreatedMilestones.forEach(async (x) => {
-            x.Id = (await MilestoneBusiness.createMilestone(mockToken, x.Title, x.MinLevel, x.FileName, x.Description)).Id as string;
-        })
+            x.Id = (await MilestoneBusiness.createMilestone(mockToken, x.Title, x.MinLevel, x.File, x.Description)).Id as string;
+        });
+
+
+
     })
 
     test("Create milestone", async () => {
-        const newMilestone = await MilestoneBusiness.createMilestone(mockToken, mockMilestone.Title, mockMilestone.MinLevel, mockMilestone.FileName, mockMilestone.Description);
+        const newMilestone = await MilestoneBusiness.createMilestone(mockToken, mockMilestone.Title, mockMilestone.MinLevel, mockMilestone.File, mockMilestone.Description);
         mockMilestone.Id = newMilestone.Id as string;
         expect(newMilestone.Title).toBe(mockMilestone.Title);
-        expect(newMilestone.FileName).toBe(mockMilestone.FileName);
+        expect(newMilestone.File).toBe(mockMilestone.File.name);
         expect(newMilestone.MinLevel).toBe(mockMilestone.MinLevel);
         expect(newMilestone.Description).toBe(mockMilestone.Description);
         expect(newMilestone.Creator).toBe(mockAdmin.id);  
@@ -75,7 +88,7 @@ describe("Milestone test", () => {
     test("Find milestone", async () => {
         const milestone = await MilestoneBusiness.findMilestone(mockMilestone.Id);
         expect(milestone.Title).toBe(mockMilestone.Title);
-        expect(milestone.FileName).toBe(mockMilestone.FileName);
+        expect(milestone.File).toBe(mockMilestone.File.name);
         expect(milestone.MinLevel).toBe(mockMilestone.MinLevel);
         expect(milestone.Description).toBe(mockMilestone.Description);
         expect(milestone.Creator).toBe(mockAdmin.id);

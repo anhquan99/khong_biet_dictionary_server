@@ -23,7 +23,7 @@ const MilestoneSchema = new Schema({
         unique : true,
         min : 0
     },
-    FileName : {
+    File : {
         type : String,
         require : true
     },

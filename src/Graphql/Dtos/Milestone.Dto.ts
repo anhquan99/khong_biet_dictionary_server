@@ -1,6 +1,6 @@
 export interface MilestoneDto{
     Id? : string,
-    FileName? : string,
+    File? : string,
     MinLevel? : number,
     Title? : string,
     Description? : string,
@@ -12,7 +12,7 @@ export function convertMilestoneToDto(milestone : any) : MilestoneDto
 {
     return {
         Id : milestone._id.toString(),
-        FileName : milestone.FileName,
+        File : milestone.FileName,
         MinLevel : milestone.MinLevel,
         Title : milestone.Title,
         Description : milestone.Description,

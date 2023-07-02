@@ -5,7 +5,7 @@ import { MaxStringLength, InvalidField, MinStringLength } from '../../Enums/Erro
 import { validateEmail, validatePassword } from '../../Validations/UserValidation';
 import { roleEnum, _maxStringLength, _minStringLength } from '../../Enums/SchemaEnum';
 
-
+const _minPasswordLength = 7;
 
 const userSchema = new Schema({
     Username: {
@@ -30,7 +30,7 @@ const userSchema = new Schema({
     Password: {
         type: String,
         required : true,
-        minLength : [7, MinStringLength("password", 7)],
+        minLength : [_minPasswordLength, MinStringLength("password", _minPasswordLength)],
         maxLength : [_maxStringLength, MaxStringLength("password", _maxStringLength)],
         validate : {
             validator: (password: string) => {

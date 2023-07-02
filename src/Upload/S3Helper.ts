@@ -18,7 +18,7 @@ type S3UploadStream = {
 export class S3Helper implements FileUploads.IUploader{
     private s3: S3Client;
     public config : S3Config;
-
+    
     constructor(config: S3Config){
         this.config = config;
 

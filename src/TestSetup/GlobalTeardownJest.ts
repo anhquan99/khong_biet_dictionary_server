@@ -1,7 +1,7 @@
 import mongoose, { connection, mongo } from "mongoose";
 
-import env from "./Config";
-import { options } from "./DbSetup";
+import env from "../Utils/Config";
+import { options } from "../Utils/DbSetup";
 
 export default async () => {
     const testDbOptions = options;

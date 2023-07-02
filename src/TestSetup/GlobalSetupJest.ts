@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-import env from "./Config";
-import { options } from "./DbSetup";
+import env from "../Utils/Config";
+import { options } from "../Utils/DbSetup";
 
 beforeAll(async() => {
     const testDbOptions = options;

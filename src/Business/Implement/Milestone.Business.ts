@@ -89,7 +89,7 @@ export async function updateMilestone(token : TokenInfo, milestoneId : string, t
         const s3Helper = new S3Helper(S3ConfigTemplate);
         const timeStampFileName = Date.now() + '.' + filename.split('.').pop();
         await s3Helper.singleFileUpload(file, timeStampFileName);
-        await s3Helper.removeFile(oldMilestone.FileName);
+        await s3Helper.removeFile(oldMilestone.File);
         setValueIfNotUndefine(update, "File", timeStampFileName);
     }
     setValueIfNotUndefine(update, "Description", description);

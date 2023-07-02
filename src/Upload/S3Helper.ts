@@ -57,6 +57,7 @@ export class S3Helper implements FileUploads.IUploader{
         const filePath = this.createDestinationFilePath(timeStampFileName, mimetype,encoding);
         const uploadStream = this.createUploadStream(filePath);
         stream.pipe(uploadStream.writeStream);
+        await uploadStream.promise;
         return timeStampFileName;
     }
     async removeFile(fileName: string){

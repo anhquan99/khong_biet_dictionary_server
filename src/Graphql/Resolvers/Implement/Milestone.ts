@@ -29,9 +29,9 @@ const Meanings ={
             const token : TokenInfo = Authen(context);
             return await Business.updateMilestone(token, milestoneId, title, minLevel, file, description);
         },
-        async DeleteMeaning(_ : any, {milestoneId} : {milestoneId : string}, context : ExpressContextFunctionArgument){
+        async DeleteMilestone(_ : any, {milestoneId} : {milestoneId : string}, context : ExpressContextFunctionArgument){
             const token : TokenInfo = Authen(context);
-            await Business.deleteMeaning(milestoneId, token);
+            await Business.deleteMilestone(token, milestoneId);
             return "Success!";
         }
     }

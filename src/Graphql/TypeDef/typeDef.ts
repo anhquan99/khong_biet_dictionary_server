@@ -49,7 +49,7 @@ const typeDefs = `#graphql
   type Milestone{
     Title : String
     MinLevel : Int
-    FileName : String
+    File : String
     Creator : String
     Description : String
     CreatedAt : Date
@@ -86,7 +86,7 @@ const typeDefs = `#graphql
     DeleteMeaning(meaningId : String!) : String
     Bookmark(objectId : String!, type : String!) : Bookmark
     DeleteBookmark(objectId : String!) : String
-    Milestone(tilte : String!, minLevel : Int!, file : Upload!, description : String) : Milestone
+    Milestone(title : String!, minLevel : Int!, file : Upload!, description : String) : Milestone
     UpdateMilestone(milestoneId : String!, title : String, minLevel : Int, file : Upload, description : String) : Milestone
     DeleteMilestone(milestoneId : String!) : String
   }

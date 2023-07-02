@@ -2,7 +2,7 @@ import { validate } from 'graphql';
 import {model, Schema} from 'mongoose';
 
 import { MaxStringLength, InvalidField, MinStringLength } from '../../Enums/ErrorMessageEnum';
-import { ValidateEmail, ValidatePassword } from '../../Validations/UserValidation';
+import { validateEmail, validatePassword } from '../../Validations/UserValidation';
 import { roleEnum, _maxStringLength, _minStringLength } from '../../Enums/SchemaEnum';
 
 
@@ -22,7 +22,7 @@ const userSchema = new Schema({
         unique: true,
         validate:{
             validator: (email : string) => {
-                return ValidateEmail(email);
+                return validateEmail(email);
             },
             message: InvalidField("email address")
         }
@@ -34,7 +34,7 @@ const userSchema = new Schema({
         maxLength : [_maxStringLength, MaxStringLength("password", _maxStringLength)],
         validate : {
             validator: (password: string) => {
-                return ValidatePassword(password);
+                return validatePassword(password);
             }
         }
     },

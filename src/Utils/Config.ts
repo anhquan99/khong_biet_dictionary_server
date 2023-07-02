@@ -18,6 +18,7 @@ const env = {
     S3_SECRET_ACCESS_KEY : process.env.S3_SECRET_ACCESS_KEY,
     S3_BUCKET : process.env.S3_BUCKET,
     S3_ENDPOINT : process.env.S3_ENDPOINT,
-    S3_REGION : process.env.S3_REGION
+    S3_REGION : process.env.S3_REGION,
+    S3_FILE_MAX_SIZE : process.env.S3_FILE_MAX_SIZE
 };
 export default env;

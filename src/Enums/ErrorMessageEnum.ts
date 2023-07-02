@@ -1,5 +1,7 @@
 export const PermissionDenied = "Permission denied!";
 export const LoginRequired = "Login required!";
+export const InvalidImage = "Invalid upload image!";
+export const ImageProcessFailed = "Upload image failed!";
 
 export function MaxStringLength(fieldName : string, maxLength : number) : string{
     return `The max length of ${fieldName} is ${maxLength}`;

@@ -33,7 +33,7 @@ async function startServer() : Promise<void>
             '/',
             cors<cors.CorsRequest>(),
             bodyParser.json({limit : '50mb'}),
-            graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+            graphqlUploadExpress({ maxFileSize: env.S3_FILE_MAX_SIZE, maxFiles: 10 }),
             expressMiddleware(server, {
                 context : async ({req }) => ({req})
             })

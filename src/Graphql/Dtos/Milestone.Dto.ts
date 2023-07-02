@@ -12,7 +12,7 @@ export function convertMilestoneToDto(milestone : any) : MilestoneDto
 {
     return {
         Id : milestone._id.toString(),
-        File : milestone.FileName,
+        File : milestone.File,
         MinLevel : milestone.MinLevel,
         Title : milestone.Title,
         Description : milestone.Description,

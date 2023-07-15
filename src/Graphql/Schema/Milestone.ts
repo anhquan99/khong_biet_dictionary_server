@@ -3,6 +3,7 @@ import validator from 'validator';
 import { InvalidField, MaxStringLength } from '../../Enums/ErrorMessageEnum';
 
 const _maxStringLength = 100;
+const _maxDescriptionLength = 50000;
 
 const MilestoneSchema = new Schema({
     Title : {
@@ -23,7 +24,7 @@ const MilestoneSchema = new Schema({
         unique : true,
         min : 0
     },
-    FileName : {
+    File : {
         type : String,
         require : true
     },
@@ -35,12 +36,8 @@ const MilestoneSchema = new Schema({
     Description : {
         type : String,
         require : false,
-        validator : {
-            validator : (Description : string) => {
-                return validator.isAscii(Description);
-            },
-            message : InvalidField("description")
-        }
+        maxLength : [_maxDescriptionLength, MaxStringLength("description", _maxDescriptionLength)],
+
     },
     CreatedAt : {
         type : Date,

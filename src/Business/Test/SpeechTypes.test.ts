@@ -56,12 +56,12 @@ describe("Speech type test", () => {
             expect(st.Creator as string).toBe(mockCreator.id as string);
             expect(isNaN(Date.parse(st.CreatedAt?.toString() as string))).toBeFalsy();
         });
-        test("find speech type", async () => {
+        test("Find speech type", async () => {
             const st = await findSpeechType(mockST.name);
             expect(st.Name).toBe(mockST.name);
             expect(st.Description).toBe(mockST.description);
         });
-        test("find speech types", async () => {
+        test("Find speech types", async () => {
             const stName = "ad";
             const sts = await findSpeechTypes(stName);
             sts.forEach((item) => {

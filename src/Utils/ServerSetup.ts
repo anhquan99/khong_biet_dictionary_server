@@ -6,6 +6,10 @@ import bodyParser from 'body-parser';
 import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import {expressMiddleware} from '@apollo/server/express4';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
+
 import env from './Config'
 import typeDefs from '../Graphql/TypeDef/typeDef';
 import resolvers from '../Graphql/Resolvers/Implement/Index';
@@ -24,7 +28,6 @@ async function startServer() : Promise<void>
             csrfPrevention: true,
             cache: "bounded",
             plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
-            // introspection : env.NODE_ENV !== 'prod'
         });
 
         await server.start();
@@ -33,6 +36,7 @@ async function startServer() : Promise<void>
             '/',
             cors<cors.CorsRequest>(),
             bodyParser.json({limit : '50mb'}),
+            graphqlUploadExpress({ maxFileSize: env.S3_FILE_MAX_SIZE, maxFiles: 10 }),
             expressMiddleware(server, {
                 context : async ({req }) => ({req})
             })

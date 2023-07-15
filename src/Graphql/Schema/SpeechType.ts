@@ -1,11 +1,11 @@
 import {model, Schema} from "mongoose";
-import validator from "validator";
 
 import { InvalidField, MaxStringLength } from "../../Enums/ErrorMessageEnum";
 import StatusSchema from "./Attribute/Status";
 import VoteSchema from "./Attribute/Vote";
 
-const _maxStringLength = 100
+const _maxStringLength = 500;
+const _maxDescriptionLength = 50000;
 
 const SppechTypeSchema = new Schema({
     Name : {
@@ -13,22 +13,11 @@ const SppechTypeSchema = new Schema({
         required : true,
         unique : true,
         maxLength : [_maxStringLength, MaxStringLength('name', _maxStringLength)],
-        validate : {
-            validator : (Name : string) => {
-                return validator.isAscii(Name);
-            },
-            message : InvalidField("name")
-        }
     },
     Description : {
         type : String,
         required : false,
-        validate : {
-            validator : (Description : string) => {
-                return validator.isAscii(Description);
-            },
-            message : InvalidField("description")
-        }
+        maxLength : [_maxDescriptionLength, MaxStringLength('description', _maxDescriptionLength)],
     },
     Creator : {
         type : Schema.Types.ObjectId,

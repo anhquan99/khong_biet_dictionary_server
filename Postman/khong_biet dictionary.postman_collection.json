@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "18b9387b-533b-445d-9b75-e9d49cb856d3",
+		"name": "khong_biet dictionary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "9050623"
+	},
+	"item": [
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation Mutation($username: String, $password: String, $email: String) {\n  Register(username: $username, password: $password, email: $email)\n}",
+						"variables": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\",\n  \"email\": \"admin@admin.com\"\n}"
+					}
+				},
+				"url": "http://localhost:4000/"
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Query($username: String, $password: String) {\n  Login(username: $username, password: $password)\n}",
+						"variables": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+					}
+				},
+				"url": "http://localhost:4000/"
+			},
+			"response": []
+		},
+		{
+			"name": "Create speech type",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjY0YTA0MTBlNjM0M2IzNDJjN2ZkZDFmZCIsIlVzZXJuYW1lIjoiYWRtaW4iLCJSb2xlIjoiYWRtaW4iLCJDcmVhdGVkRGF0ZSI6IjIwMjMtMDctMDFUMTU6MTM6MDAuMDA3WiIsImlhdCI6MTY4ODIyNDM4MCwiZXhwIjoxNjg4MjI3OTgwfQ.kig5bS8uC6GRz29xadj4tBPImL8hjq9-pVfC4RB7t8U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation SpeechType($name: String!, $description: String) {\n  SpeechType(name: $name, description: $description) {\n    Id\n    Name\n    Creator\n    CreatedAt\n    Description\n  }\n}",
+						"variables": "{\n  \"name\": \"Noun\",\n  \"description\": \"A noun is a word that generally functions as the name of a specific object or set of objects, such as living creatures, places, actions, qualities, states of existence, or ideas.\"\n}"
+					}
+				},
+				"url": "http://localhost:4000/"
+			},
+			"response": []
+		},
+		{
+			"name": "Create word",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjY0YTA0MTBlNjM0M2IzNDJjN2ZkZDFmZCIsIlVzZXJuYW1lIjoiYWRtaW4iLCJSb2xlIjoiYWRtaW4iLCJDcmVhdGVkRGF0ZSI6IjIwMjMtMDctMDFUMTU6MTM6MDAuMDA3WiIsImlhdCI6MTY4ODIyNDM4MCwiZXhwIjoxNjg4MjI3OTgwfQ.kig5bS8uC6GRz29xadj4tBPImL8hjq9-pVfC4RB7t8U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation Word($characters: String, $speechTypeId: String) {\n  Word(characters: $characters, speechTypeId: $speechTypeId) {\n    Id\n    Characters\n    CreatedAt\n    NumberOfSearch\n    IsDictionary\n    Creator\n    SpeechType\n    Votes\n  }\n}",
+						"variables": "{\n  \"characters\": \"Validator\",\n  \"speechTypeId\": \"64a045cab7aa743b27047eb6\"\n}"
+					}
+				},
+				"url": "http://localhost:4000/"
+			},
+			"response": []
+		},
+		{
+			"name": "Milestone",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjY0YTA0MTBlNjM0M2IzNDJjN2ZkZDFmZCIsIlVzZXJuYW1lIjoiYWRtaW4iLCJSb2xlIjoiYWRtaW4iLCJDcmVhdGVkRGF0ZSI6IjIwMjMtMDctMDFUMTU6MTM6MDAuMDA3WiIsImlhdCI6MTY4ODIyNDM4MCwiZXhwIjoxNjg4MjI3OTgwfQ.kig5bS8uC6GRz29xadj4tBPImL8hjq9-pVfC4RB7t8U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "",
+						"variables": ""
+					}
+				},
+				"url": "http://localhost:4000/"
+			},
+			"response": []
+		}
+	]
+}

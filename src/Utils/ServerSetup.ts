@@ -5,6 +5,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import {expressMiddleware} from '@apollo/server/express4';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 
 import env from './Config'

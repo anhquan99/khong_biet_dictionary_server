@@ -2,7 +2,6 @@ import * as Business from '../../../Business/Implement/Milestone.Business';
 import { Authen } from '../../../Middlewares/Auth';
 import { ExpressContextFunctionArgument } from '@apollo/server/dist/esm/express4';
 import { TokenInfo } from '../../../Middlewares/Token';
-import { FileUploads } from '../../../Upload';
 
 const Meanings ={
     Query : {
@@ -18,13 +17,13 @@ const Meanings ={
     },
     Mutation : {
         async Milestone(_ : any, {title, minLevel, file, description} : 
-            {title : string, minLevel : number, file : FileUploads.File, description : string} , context : ExpressContextFunctionArgument)
+            {title : string, minLevel : number, file : any, description : string} , context : ExpressContextFunctionArgument)
         {
             const token : TokenInfo = Authen(context);
             return await Business.createMilestone(token, title, minLevel, file, description);
         }, 
         async UpdateMilestone(_ : any, {milestoneId, title, minLevel, file, description} : 
-            {milestoneId : string, title? : string, minLevel? : number, file? : FileUploads.File, description? : string}, context :ExpressContextFunctionArgument)
+            {milestoneId : string, title? : string, minLevel? : number, file? : any, description? : string}, context :ExpressContextFunctionArgument)
         {
             const token : TokenInfo = Authen(context);
             return await Business.updateMilestone(token, milestoneId, title, minLevel, file, description);

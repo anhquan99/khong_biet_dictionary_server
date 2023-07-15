@@ -9,13 +9,12 @@ import { setRegexIfNotUndefine } from "../../Utils/FilterHelper";
 import { setDateFilter } from "../../Utils/FilterHelper";
 import { roleEnumTs } from "../../Enums/SchemaEnum";
 import { NotFoundMessage, PermissionDenied, InvalidImage, ImageProcessFailed } from "../../Enums/ErrorMessageEnum";
-import { FileUploads } from "../../Upload";
 import { S3Helper, S3ConfigTemplate } from "../../Upload/S3Helper";
 import { validateImage } from "../../Validations/ImageValidation";
 
 const entity = "Milestone";
 
-export async function createMilestone(token : TokenInfo, title : string, minLevel : number, file : FileUploads.File, description? : string)
+export async function createMilestone(token : TokenInfo, title : string, minLevel : number, file : any, description? : string)
 {
     if(token.Role !== roleEnumTs.admin) throw new Error(PermissionDenied);
     const s3Helper = new S3Helper(S3ConfigTemplate);
@@ -39,7 +38,6 @@ export async function createMilestone(token : TokenInfo, title : string, minLeve
         await s3Helper.singleFileUpload(file, timeStampFileName);
     }
     catch(err){
-        console.error(err);
         newMilestone.delete();
         throw new Error(ImageProcessFailed);
     }
@@ -67,7 +65,7 @@ export async function findMilestones(title? : string, levelFrom? : number, level
 
     return result;
 }
-export async function updateMilestone(token : TokenInfo, milestoneId : string, title? : string, minLevel? : number, file? : FileUploads.File, description? : string)
+export async function updateMilestone(token : TokenInfo, milestoneId : string, title? : string, minLevel? : number, file? : any, description? : string)
 {
     if(token.Role !== roleEnumTs.admin) throw new Error(PermissionDenied);
 
@@ -81,21 +79,31 @@ export async function updateMilestone(token : TokenInfo, milestoneId : string, t
     setValueIfNotUndefine(update, "Title", title);
     setValueIfNotUndefine(update, "MinLevel", minLevel);
     
-    const {filename, mimetype} = await file;
-    if(file){
-        if(validateImage({filename, mimetype})){
-            throw new Error(InvalidImage);
-        }
-        const s3Helper = new S3Helper(S3ConfigTemplate);
-        const timeStampFileName = Date.now() + '.' + filename.split('.').pop();
-        await s3Helper.singleFileUpload(file, timeStampFileName);
-        await s3Helper.removeFile(oldMilestone.File);
-        setValueIfNotUndefine(update, "File", timeStampFileName);
-    }
+    const {filename, mimetype} = (await file).file;
     setValueIfNotUndefine(update, "Description", description);
     
-    const updateMilestone = await MilestoneModel.findOneAndUpdate(filter, update, {new : false});
-    if(!updateMilestone) throw new Error(NotFoundMessage(entity));
+    const timeStampFileName = Date.now() + '.' + filename.split('.').pop();
+    const s3Helper = new S3Helper(S3ConfigTemplate);
+    try
+    {
+        if(file){
+            if(validateImage({filename, mimetype}))
+            {
+                throw new Error(InvalidImage);
+            }
+            await s3Helper.singleFileUpload(file, timeStampFileName);
+            setValueIfNotUndefine(update, "File", timeStampFileName);
+        }
+        const updateMilestone = await MilestoneModel.findOneAndUpdate(filter, update, {new : false});
+        if(oldMilestone.File)
+        {
+            await s3Helper.removeFile(oldMilestone.File);
+        }
+    }
+    catch(err)
+    {
+        s3Helper.removeFile(timeStampFileName);
+    }
     return convertMilestoneToDto(updateMilestone);
 }
 export async function deleteMilestone(token : TokenInfo, milestoneId : string){
@@ -103,7 +111,10 @@ export async function deleteMilestone(token : TokenInfo, milestoneId : string){
     const milestone = await MilestoneModel.findOneAndDelete({_id : new mongoose.Types.ObjectId(milestoneId)});
     if(milestone){
        const s3Helper = new S3Helper(S3ConfigTemplate);
-       s3Helper.removeFile(milestone.File); 
+       if(milestone.File)
+       {
+           s3Helper.removeFile(milestone.File); 
+       }
     }
     else{
         throw new Error(NotFoundMessage(entity));

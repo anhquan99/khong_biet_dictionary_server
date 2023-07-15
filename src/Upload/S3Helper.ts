@@ -1,6 +1,6 @@
 import stream from 'stream'
 import fs from 'fs';
-import {FileUploads} from './index'
+import {IUploader} from './index'
 import { DeleteObjectCommand, PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import env from '../Utils/Config';
 
@@ -13,9 +13,9 @@ type S3Config ={
 };
 type S3UploadStream = {
     writeStream : stream.PassThrough;
-    promise : Promise<Any>;
+    promise : Promise<any>;
 };  
-export class S3Helper implements FileUploads.IUploader{
+export class S3Helper implements IUploader{
     private s3: S3Client;
     public config : S3Config;
     
@@ -47,11 +47,11 @@ export class S3Helper implements FileUploads.IUploader{
     private createDestinationFilePath(
         filename : string,
         mimetype : string,
-        encoding : srting
+        encoding : string
     ): string{
         return filename;
     }
-    async singleFileUpload(file: FileUpload.File, timeStampFileName : string){
+    async singleFileUpload(file: any, timeStampFileName : string){
         const { createReadStream, filename, mimetype, encoding } = (await file).file;
         const stream = createReadStream();
         const filePath = this.createDestinationFilePath(timeStampFileName, mimetype,encoding);

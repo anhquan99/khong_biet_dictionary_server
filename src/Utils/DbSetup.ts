@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose, { mongo, ConnectOptions } from "mongoose";
 
 import env from './Config'
 
@@ -11,9 +11,9 @@ export const options = {
 async function connectDb() : Promise<void>
 {
     mongoose.set('strictQuery', true);
-    await mongoose.connect(env.MONGODB, options).then(() => {
+    await mongoose.connect(env.MONGODB, options as ConnectOptions).then(() => {
         console.log("Database connected");
-    }).catch((err) => {
+    }).catch((err : Error) => {
         console.log("Database connection error");
         throw err;
     });

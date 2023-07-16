@@ -27,3 +27,8 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-./docker_volumes/s3}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
     command: awslocal kinesis list-streams
+  server:
+    container_name: khong_biet_server
+    image: khong_biet_dictionary_server
+    ports:
+      - 4000:4000
